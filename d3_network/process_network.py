@@ -66,6 +66,6 @@ def main():
 	with open('data.json', 'w') as outfile:
 		json.dump(new_data, outfile, indent=2)
 
-if __init__=='__main__":
+if __init__=='__main__':
 	main()
 
