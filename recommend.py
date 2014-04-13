@@ -13,57 +13,73 @@ def get_business_ids(user_id):
 def get_rating(user_id,business_id):
     return data[user_id]["reviews"][business_id]["rating"]
 
-def distance_method(user_id1, user_id2,method='manhattan'):
+def distance_method(user_id1, user_id2, r):
     distance = 0
     common_rating = False
     user1_business_ids = get_business_ids(user_id1)
     user2_business_ids = get_business_ids(user_id2)
 
-    if method == 'manhattan':
-        r = 1
-    if method == 'euclidean':  
-        r = 2
-
     for business_id in list(user1_business_ids.keys()):
         if business_id in list(user2_business_ids.keys()):
             distance += pow(abs(get_rating(user_id1,business_id)-get_rating(user_id2,business_id)), r)
             common_rating = True
+
     if common_rating:
         return pow(distance, 1/r)
     else:
         return None
 
-def nearest_with_user(user_id1,method='manhattan'):
-    """returns a list of tuples with the format: 
-    (distance,user) in order of increasing distance"""
+def nearest_with_user(user_id1,r):
+    """returns a user with the nearest distance as user_id1
+    manhattan: r = 1
+    euclidean: r = 2            
+    """
     names_by_distance = []
     otherusers_lst = list(data.keys())
     otherusers_lst.remove(user_id1)
 
     for otheruser in otherusers_lst:
-        distance = distance_method(user_id1,otheruser,method)
+        distance = distance_method(user_id1,otheruser,r)
         if distance:    
             names_by_distance.append((distance,otheruser))
     names_by_distance.sort()
-    return names_by_distance
+    return names_by_distance[0][1]
 
 def recommend_new_restaurant(user_id1,method='manhattan'): 
     """give a list of recommended businesses and their ratings 
     using method: manhattan or euclidean"""
     recommendations = []
-    neighbor = nearest_with_user(user_id1,method)[0][1]
-    neighbor_reviews = get_business_ids(neighbor)
-    user_reviews = get_business_ids(user_id1)
+
+    if method == 'manhattan':
+        neighbor = nearest_with_user(user_id1,1)
+        neighbor_reviews = get_business_ids(neighbor)
+        user_reviews = get_business_ids(user_id1)
+
+    elif method == 'euclidean':
+        neighbor = nearest_with_user(user_id1,2)
+        neighbor_reviews = get_business_ids(neighbor)
+        user_reviews = get_business_ids(user_id1)
+
+    elif method == 'pearson':
+        neighbor = highest_correlation(user_id1)
+        neighbor_reviews = get_business_ids(neighbor)
+        user_reviews = get_business_ids(user_id1)
+
     for business_id in neighbor_reviews:
         if business_id not in user_reviews:
             recommendations.append((business_id,get_rating(neighbor,business_id)))
     return recommendations
 
+def highest_correlation(user_id1):
+    """returns a user with the highest correlation with user_id1"""
+    correlation_lst = []
+    otherusers_lst = list(data.keys())
+    otherusers_lst.remove(user_id1)
 
-
-
-
-
+    for otheruser in otherusers_lst:
+        correlation_lst.append((correlation(user_id1,otheruser),otheruser))
+    print('highest correlation is', max(correlation_lst)[0]) #for testing
+    return max(correlation_lst)[1]
 
 def correlation(user_id1,user_id2):
     n = 0; xy = 0; x = 0; y = 0; sq_y = 0; sq_x = 0
@@ -73,8 +89,8 @@ def correlation(user_id1,user_id2):
     for business_id in list(user1_business_ids.keys()):
         if business_id in list(user2_business_ids.keys()):
             n += 1
-            rating_by_user_1 = get_rating(user_id1)
-            rating_by_user_2 = get_rating(user_id2)
+            rating_by_user_1 = get_rating(user_id1,business_id)
+            rating_by_user_2 = get_rating(user_id2,business_id)
             x = x + rating_by_user_1
             y = y + rating_by_user_2
             xy = xy + rating_by_user_1*rating_by_user_2
@@ -82,18 +98,20 @@ def correlation(user_id1,user_id2):
             sq_x = sq_x + rating_by_user_2**2
 
     if n == 0:
-        return 'no business id matched'
+        return 0
+
     else:
-        denominator = sqrt(sq_x - (x**2) / n) * sqrt(sq_y -(y**2) / n)
+        denominator = sqrt(abs(sq_x - float(x**2) / n)) * sqrt(abs(sq_y - float(y**2) / n))
         if denominator == 0:
             return 0
         else:
             corr = (xy -( x * y) / n) / denominator
-            #return corr
-            return sort(corr)[0]
+            return corr
+   
 
 
-"""def pearson(user_id1,user_id2):
+"""
+def pearson(user_id1,user_id2):
     sum_xy = 0
     sum_x = 0
     sum_y = 0
