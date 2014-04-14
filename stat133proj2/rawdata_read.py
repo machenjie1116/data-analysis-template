@@ -1,5 +1,8 @@
 
 
+def is_food_related(business):
+    categories = ["Food", "Restaturants", "Buffets", "Creperies", "Juice Bars & Smoothies", "Candy Stores", "Diners"]
+
 
 def read_yelpdata(location = r'./yelp_academic_dataset/yelp_rawdata'):
     businesses = {}
@@ -9,7 +12,7 @@ def read_yelpdata(location = r'./yelp_academic_dataset/yelp_rawdata'):
         for line in infile:
             item = json.loads(line)
             if item['type'] == 'business':
-				if "Restaurants" in item['categories'] or "Food" in item['categories']:
+				if is_food_related(item):
 					businesses['business_id'] = {"city":item['city'], "state":item["state"]}
             elif item['type'] == 'review':
                 business_id = item['business_id']
@@ -44,15 +47,6 @@ def process_data1(users, businesses):
 				users[user][business_id] = [curr_rating, "NA", "NA"]
 	return users
 	"""
-
-			
-			
-		
-
-
-
-
-
 
 
 

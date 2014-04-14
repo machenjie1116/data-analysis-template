@@ -1,5 +1,5 @@
 import json
-import oauth2
+#import oauth2
 import optparse
 import urllib
 import urllib2
@@ -95,10 +95,11 @@ def get_business_locations():
 def compute_user_locations_helper(users):
 	return users
 
+
+import operator
 def compute_user_locations():
     users_file = "./processed_data/users.txt"
     businesses_file = "./processed_data/businesses.txt"
-    modified_users_output = "./processed_data/modified_users.txt"
     businesses = {}
     with open(businesses_file, 'rb') as infile:
         businesses = json.load(infile)
@@ -121,14 +122,66 @@ def compute_user_locations():
         for key in users[user].keys():
             if (key != "reviews"):
                 del users[user][key]
-    with open(modified_users_output, 'w') as outfile:
-        json.dump(users, outfile, indent=4)
+    user_locations = {}
+    for user in users.keys():
+        location_count = {}
+        for business in users[user]["reviews"].keys():
+            business_location = users[user]["reviews"][business]["city"]
+            if location_count.has_key(business_location):
+                location_count[business_location] += 1
+            else:
+                location_count[business_location] = 1
+        location = max(location_count.iteritems(), key=operator.itemgetter(1))[0]
+        user_locations[user] = location
+
+    for user in users:
+        users[user]["location"] = user_locations[user]
+    return users
+
+
+
+
+def read_yelpdata(location = r'./yelp_academic_dataset/yelp_rawdata'):
+    businesses = []
+    with open(location, 'rb') as infile:
+        for line in infile:
+            item = json.loads(line)
+            if item['type'] == 'business':
+                if is_food_related(item):
+                    businesses.append(item["business_id"])
+    return businesses
+
+def is_food_related(business):
+    categories = ["Food", "Restaturants", "Buffets", "Creperies", "Juice Bars & Smoothies", "Candy Stores", "Diners"]
+    for x in categories:
+        if x in business["categories"]:
+            return True
+    return False
+
+
+
+def filter_businesses(users, businesses):
+    for user in users.keys():
+        for business_id in users[user]["reviews"].keys():
+            if (business_id not in businesses):
+                del users[user]["reviews"][business_id]
+        if users[user]["reviews"] == {}:
+            del users[user]
+    return users
+
+
 
 
 
 def main():
-	compute_user_locations()
-	pass
+    modified_users_output = "./processed_data/modified_users4.txt"
+    users =  compute_user_locations()
+    businesses = read_yelpdata()
+    filter_businesses(users, businesses)
+
+    with open(modified_users_output, 'w') as outfile:
+        json.dump(users, outfile, indent=4)
+
 
 if __name__ == '__main__':
     main()
