@@ -19,6 +19,38 @@ def get_data():
     user_ids = users.keys()
     return users, user_ids, business_ids
 
+# get top-x businesses in a city
+def business_topx():
+    top = 1
+    (users, user_ids, business_ids) = get_data()
+    businesses = []
+    business_count = {}
+    for user in users.keys():     
+        for business in users[user]:
+            businesses.append(business)
+    #count business occurances, sort by most reviews
+    for business in businesses:
+        if business not in business_count.keys():
+            business_count[business] = businesses.count(business)
+    sorted_x = sorted(business_count.iteritems(), key=operator.itemgetter(1), reverse=True)
+    top_x = sorted_x[0:top]
+    business_ids = []; business_reviews = []
+    for x in xrange(0,top):
+        business_ids.append(top_x[x][0])
+        business_reviews.append(top_x[x][1])
+    # filter out non-top reviews from users    
+    new_users = {}
+    for user in users.keys():
+        user_biz = []
+        for business in users[user]:
+            if business in business_ids:
+                user_biz.append(business)
+                new_users[user] = user_biz
+    users = new_users
+    user_ids = users.keys()
+    return users, user_ids, business_ids, business_reviews
+
+
 # reindex user id's for displaying
 def reid_ids():
     (users, user_ids, business_ids, business_reviews) = business_topx()
@@ -48,7 +80,7 @@ def create_nodes():
         nodes.append({"person":user, "reviewcount":len(users[user])})
     i = 0 
     for business in business_ids:
-        nodes.append({"person":business, "reviewcount":len(business_reviews[i])})
+        nodes.append({"person":business, "reviewcount":business_reviews[i]})
         i += 1
     return nodes
 
@@ -66,6 +98,5 @@ def main():
 	with open('data.json', 'w') as outfile:
 		json.dump(new_data, outfile, indent=2)
 
-if __init__=='__main__':
+if __name__=='__main__':
 	main()
-
