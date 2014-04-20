@@ -14,6 +14,9 @@ def get_business_ids(user_id):
 def get_rating(user_id,business_id):
     return data[user_id]["reviews"][business_id]["rating"]
 
+def get_category(user_id,business_id):
+    return data[user_id]["reviews"][business_id]["categories"]
+
 def distance_method(user_id1, user_id2, r):
     distance = 0
     common_rating = False
@@ -53,18 +56,18 @@ def recommend_new_restaurant(user_id1,method='manhattan'):
 
     if method == 'manhattan':
         neighbor = nearest_with_user(user_id1,1)
-        neighbor_reviews = get_business_ids(neighbor)
-        user_reviews = get_business_ids(user_id1)
 
     elif method == 'euclidean':
         neighbor = nearest_with_user(user_id1,2)
-        neighbor_reviews = get_business_ids(neighbor)
-        user_reviews = get_business_ids(user_id1)
+
+    elif method == 'cosine':
+        neighbor = highest_cosine_user(user_id1)
 
     elif method == 'pearson':
         neighbor = highest_correlation(user_id1)
-        neighbor_reviews = get_business_ids(neighbor)
-        user_reviews = get_business_ids(user_id1)
+    
+    neighbor_reviews = get_business_ids(neighbor)
+    user_reviews = get_business_ids(user_id1)    
 
     for business_id in neighbor_reviews:
         if business_id not in user_reviews:
@@ -110,37 +113,6 @@ def correlation(user_id1,user_id2):
             return corr
 
 
-
-"""
-def pearson(user_id1,user_id2):
-    sum_xy = 0
-    sum_x = 0
-    sum_y = 0
-    sum_x2 = 0
-    sum_y2 = 0
-    n = 0
-    user1_business_ids = get_business_ids(user_id1)
-    user2_business_ids = get_business_ids(user_id2)
-
-    for business_id in list(user1_business_ids.keys()):
-        if business_id in list(user2_business_ids.keys()):
-            n += 1
-            x = get_rating(user_id1,business_id)
-            y = get_rating(user_id2,business_id)
-            sum_xy += x*y
-            sum_x += x
-            sum_y += y
-            sum_x2 += x**2
-            sum_y2 += y**2
-
-    denominator = sqrt(sum_x2 - (sum_x**2) / n) * sqrt(sum_y2 - (sum_y**2) / n)
-
-    if denominator == 0:
-        return 0
-    else:
-        return (sum_xy - (sum_x * sum_y)/n)/denominator"""
-
-
 def cosine_similarity(user_1, user_2):
     business1 = dict_from_file[user_1]["reviews"].keys()
     business2 = dict_from_file[user_2]["reviews"].keys()
@@ -169,6 +141,17 @@ def highest_cosine_sim(user1):
         correlation_lst[otheruser] = cosine_similarity(user1,otheruser)
     closest_user, correlation = max(correlation_lst.iteritems(), key=operator.itemgetter(1))
     return "{0}, {1}, {2}".format(user1, closest_user, correlation)
+
+def highest_cosine_user(user1):
+    correlation_lst = {}
+    otherusers_lst = list(data.keys())
+    otherusers_lst.remove(user1)
+
+    for otheruser in otherusers_lst:
+        correlation_lst[otheruser] = cosine_similarity(user1,otheruser)
+    closest_user, correlation = max(correlation_lst.iteritems(), key=operator.itemgetter(1))
+    print(closest_user)
+    return closest_user
 
 
 ###### Testing Commands ######
