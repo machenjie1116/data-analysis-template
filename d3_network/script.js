@@ -1,6 +1,6 @@
 var w = 800
 var h = 700
-var	r = 6
+var r = 6
 
 
 function network(data)
