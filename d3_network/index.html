@@ -1,27 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>D3: Force layout</title>
-		<script type="text/javascript"></script>
-		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-		<style type="text/css">
-			/* No Style */
-		</style>
+<html>
+ <head>
+    <title>Yelp Network</title>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+
+    <style type="text/css">
+    </style>
 	</head>
 	<body>
 		<header>
     		<h1>Yelp User Network</h1>
-    		<p>Businesses and users linked together according to <a href="https://www.yelp.com/academic_dataset">yelp</a>. User nodes are sized based on review count, and colored by user and business.</p>
-    		</header>
-			<div id="data_selection" class="control">
-        	<h3>Data</h3>
-        	<select id="data_select">
-          		<option value="test.json">Test</option>
-          		<option value="test1.json">Test 1</option>
+    		<p>Top 5 businesses in a city. Businesses and users linked together according to <a href="https://www.yelp.com/academic_dataset">yelp</a>. User nodes are sized based on review count, and colored by user and business. </p>
 
-		<script defer src="script.js"></script>
-		<script type="text/javascript"></script>
+    	<div id="demo">
+        	<div id="buttons">
+        	<button id="Berkeley">Berkeley</button>
+        	<button id="NewYork">New York</button>
+        	<button id="LosAngeles">Los Angeles</button>
+        	</div>
+    	</div>
 
-	</body>
+    <script type="text/javascript">
+        init();
+    </script>
+
+
+ </body>
 </html>
