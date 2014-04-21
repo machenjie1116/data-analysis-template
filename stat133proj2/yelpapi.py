@@ -1,10 +1,12 @@
 import json
-#import oauth2
+import oauth2
 import optparse
 import urllib
 import urllib2
 import time
 import os
+
+
 
 def request(host, path, url_params, consumer_key, consumer_secret, token, token_secret):
   """Returns response for API request."""
@@ -41,7 +43,7 @@ def request(host, path, url_params, consumer_key, consumer_secret, token, token_
   if response.has_key("error"):
 	  return 0
   else:
-	  return response["location"]
+	  return response
 
 
 def get_business_locations():
@@ -91,11 +93,6 @@ def get_business_locations():
 	elapsed_time = time.time() - start_time
 	print "Elapsed Time: ", elapsed_time, " s"
 
-
-def compute_user_locations_helper(users):
-	return users
-
-
 import operator
 def compute_user_locations():
     users_file = "./processed_data/users.txt"
@@ -138,9 +135,6 @@ def compute_user_locations():
         users[user]["location"] = user_locations[user]
     return users
 
-
-
-
 def read_yelpdata(location = r'./yelp_academic_dataset/yelp_rawdata'):
     businesses = []
     with open(location, 'rb') as infile:
@@ -158,8 +152,6 @@ def is_food_related(business):
             return True
     return False
 
-
-
 def filter_businesses(users, businesses):
     for user in users.keys():
         for business_id in users[user]["reviews"].keys():
@@ -170,18 +162,54 @@ def filter_businesses(users, businesses):
     return users
 
 
-
+def get_business_info(business_id):
+    host = "api.yelp.com"
+    base_path = "/v2/business/"
+    url_params = {}
+    consumer_key = "hdFjqcPRZyZ0eqi26af3tw"
+    consumer_secret = "Ex5U5ZJflQb-tx4T0AJiyKKf1yM"
+    token = "-w0vkTLODYebA_4PrEer9T48bHB_TD1S"
+    token_secret = "PZnOemFP0TJbkzLKQsBn8lNO3U8"
+    path = base_path + business_id
+    response = request(host, path, url_params, consumer_key, consumer_secret, token, token_secret)
+    try:
+        if response.has_key("error"):
+            return 0
+    except:
+		print response, business_id
+    else:
+		return (response["categories"], response["name"])
 
 
 def main():
-    modified_users_output = "./processed_data/modified_users4.txt"
-    users =  compute_user_locations()
-    businesses = read_yelpdata()
-    filter_businesses(users, businesses)
+    users_input = "./processed_data/onlyfood_users.txt"
+    users_output = "./processed_data/name_category_users.txt"
+    
+    with open(users_input, 'rb') as infile:
+        data = json.load(infile)
+    business_ids = []
+    for user in data.keys():
+        for business_id in data[user]["reviews"]:
+            business_ids.append(business_id)
+    
+    total = float(len(business_ids))
+    business_info = {}
+    count = 0
+    for business_id in business_ids:
+        (categs, name) = get_business_info(business_id)
+        categories = [x[0] for x in categs]
+        business_info[business_id] = (name,  categories)
+        count += 1
+        if ((count % 100) == 0):
+            print "{0} / {1} businesses retreived".format(count, total)
 
-    with open(modified_users_output, 'w') as outfile:
+    for user in data.keys():
+        for business_id in data[user]["reviews"]:
+            name, categories = business_info[business_id]
+            users[user]["reviews"][business_id]["categories"] = categories
+            users[user]["reviews"][business_id]["name"] = name
+    with open(users_output, "w") as outfile:
         json.dump(users, outfile, indent=4)
-
 
 if __name__ == '__main__':
     main()

@@ -3,7 +3,7 @@ import json
 from math import sqrt
 import numpy as np
 
-with open('./processed_data/modified_users.txt','r') as inf:
+with open('./processed_data/onlyfood_users.txt','r') as inf:
     dict_from_file = json.load(inf)
     data = dict_from_file
 
@@ -22,6 +22,8 @@ def distance_method(user_id1, user_id2, r):
     common_rating = False
     user1_business_ids = get_business_ids(user_id1)
     user2_business_ids = get_business_ids(user_id2)
+    if len(set(user2_business_ids).difference(set(user1_business_ids))) == 0:
+        return 10000
 
     for business_id in list(user1_business_ids.keys()):
         if business_id in list(user2_business_ids.keys()):
@@ -116,6 +118,8 @@ def correlation(user_id1,user_id2):
 def cosine_similarity(user_1, user_2):
     business1 = dict_from_file[user_1]["reviews"].keys()
     business2 = dict_from_file[user_2]["reviews"].keys()
+    if len(set(business2).difference(set(business1))) == 0:
+        return 0.0
     business1.extend(business2)
     businesses = set(business1)
     ratings_1 = []
@@ -129,29 +133,25 @@ def cosine_similarity(user_1, user_2):
             ratings_2.append(dict_from_file[user_2]["reviews"][business]["rating"])
         else:
             ratings_2.append(0)
+    
     return float(np.dot(ratings_1, ratings_2) / sqrt(np.dot(ratings_1, ratings_1) * np.dot(ratings_2, ratings_2)))
 
-import operator
-def highest_cosine_sim(user1):
-    correlation_lst = {}
-    otherusers_lst = list(data.keys())
-    otherusers_lst.remove(user1)
-
-    for otheruser in otherusers_lst:
-        correlation_lst[otheruser] = cosine_similarity(user1,otheruser)
-    closest_user, correlation = max(correlation_lst.iteritems(), key=operator.itemgetter(1))
-    return "{0}, {1}, {2}".format(user1, closest_user, correlation)
 
 def highest_cosine_user(user1):
-    correlation_lst = {}
+    maximum_correlation = -1000.0
+    maximum_user = None
+
     otherusers_lst = list(data.keys())
     otherusers_lst.remove(user1)
 
     for otheruser in otherusers_lst:
-        correlation_lst[otheruser] = cosine_similarity(user1,otheruser)
-    closest_user, correlation = max(correlation_lst.iteritems(), key=operator.itemgetter(1))
-    print(closest_user)
-    return closest_user
+        corr = cosine_similarity(user1,otheruser)
+        if (corr > maximum_correlation):
+            maximum_correlation =corr
+            maximum_user = otheruser
+
+    print(user1, maximum_user, maximum_correlation)
+    return maximum_user
 
 
 ###### Testing Commands ######
