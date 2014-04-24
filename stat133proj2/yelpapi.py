@@ -174,9 +174,10 @@ def get_business_info(business_id):
     response = request(host, path, url_params, consumer_key, consumer_secret, token, token_secret)
     try:
         if response.has_key("error"):
-            return 0
+            return (None, None)
     except:
-		print response, business_id
+        print response, business_id
+        return (None, None)
     else:
 		return (response["categories"], response["name"])
 
@@ -191,13 +192,18 @@ def main():
     for user in data.keys():
         for business_id in data[user]["reviews"]:
             business_ids.append(business_id)
+
+    business_ids = list(set(business_ids))
     
     total = float(len(business_ids))
     business_info = {}
     count = 0
     for business_id in business_ids:
         (categs, name) = get_business_info(business_id)
-        categories = [x[0] for x in categs]
+        if (categs):
+            categories = [x[0] for x in categs]
+        else:
+            categories = None
         business_info[business_id] = (name,  categories)
         count += 1
         if ((count % 100) == 0):
@@ -206,10 +212,10 @@ def main():
     for user in data.keys():
         for business_id in data[user]["reviews"]:
             name, categories = business_info[business_id]
-            users[user]["reviews"][business_id]["categories"] = categories
-            users[user]["reviews"][business_id]["name"] = name
+            data[user]["reviews"][business_id]["categories"] = categories
+            data[user]["reviews"][business_id]["name"] = name
     with open(users_output, "w") as outfile:
-        json.dump(users, outfile, indent=4)
+        json.dump(data, outfile, indent=4)
 
 if __name__ == '__main__':
     main()
