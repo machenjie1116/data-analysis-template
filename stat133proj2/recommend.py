@@ -26,10 +26,6 @@ def get_category(user_id,business_id):
 def get_location(user_id):
     return data[user_id]["location"]
 
-def test():
-    for userid in list(data.keys()):
-        print(fav_category(userid))
-
 def fav_category(user_id):
     fav_dict = {}
     business_id_lst = list(get_business_ids(user_id).keys())
