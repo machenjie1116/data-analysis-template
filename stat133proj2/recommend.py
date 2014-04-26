@@ -2,13 +2,17 @@ import random
 import json
 from math import sqrt
 import numpy as np
+import sys
 
-with open('./processed_data/onlyfood_users.txt','r') as inf:
+MAX_INT = sys.maxint
+MIN_INT = -sys.maxint - 1
+
+with open('./processed_data/users_latest.txt','r') as inf:
     dict_from_file = json.load(inf)
     data = dict_from_file
 
+"""returns a dictionary of {business_id: {"rating": NA, "state": NA, "city": NA}} """""
 def get_business_ids(user_id):
-    """returns a dictionary of {business_id: {"rating": NA, "state": NA, "city": NA}} """
     return data[user_id]["reviews"]
 
 def get_rating(user_id,business_id):
@@ -17,43 +21,9 @@ def get_rating(user_id,business_id):
 def get_category(user_id,business_id):
     return data[user_id]["reviews"][business_id]["categories"]
 
-def distance_method(user_id1, user_id2, r):
-    distance = 0
-    common_rating = False
-    user1_business_ids = get_business_ids(user_id1)
-    user2_business_ids = get_business_ids(user_id2)
-    if len(set(user2_business_ids).difference(set(user1_business_ids))) == 0:
-        return 10000
 
-    for business_id in list(user1_business_ids.keys()):
-        if business_id in list(user2_business_ids.keys()):
-            distance += pow(abs(get_rating(user_id1,business_id)-get_rating(user_id2,business_id)), r)
-            common_rating = True
-
-    if common_rating:
-        return pow(distance, 1/r)
-    else:
-        return None
-
-def nearest_with_user(user_id1,r):
-    """returns a user with the nearest distance as user_id1
-    manhattan: r = 1
-    euclidean: r = 2
-    """
-    names_by_distance = []
-    otherusers_lst = list(data.keys())
-    otherusers_lst.remove(user_id1)
-
-    for otheruser in otherusers_lst:
-        distance = distance_method(user_id1,otheruser,r)
-        if distance:
-            names_by_distance.append((distance,otheruser))
-    names_by_distance.sort()
-    return names_by_distance[0][1]
-
-def recommend_new_restaurant(user_id1,method='manhattan'):
-    """give a list of recommended businesses and their ratings
-    using method: manhattan or euclidean"""
+"""
+def recommend_new_restaurant(user_id1,method):
     recommendations = []
 
     if method == 'manhattan':
@@ -67,17 +37,42 @@ def recommend_new_restaurant(user_id1,method='manhattan'):
 
     elif method == 'pearson':
         neighbor = highest_correlation(user_id1)
-    
+
     neighbor_reviews = get_business_ids(neighbor)
-    user_reviews = get_business_ids(user_id1)    
+    user_reviews = get_business_ids(user_id1)
 
     for business_id in neighbor_reviews:
         if business_id not in user_reviews:
             recommendations.append((business_id,get_rating(neighbor,business_id)))
     return recommendations
 
+"""
+
+"""
+1. Gets dictionary of closest users with (key=distance, value=list(users))
+2. Then go down users in descending similarity to recommend restaurants
+"""
+def recommend_new_restaurant_2(user1, method):
+    if method == 'manhattan':
+        pass
+
+    elif method == 'euclidean':
+        pass
+
+    elif method == 'cosine':
+        pass
+
+    elif method == 'pearson':
+        pass
+
+    return None
+
+"""
+#The troublesome pearson correlation coefficient method
+# returns a user with the highest correlation with user_id1
+
 def highest_correlation(user_id1):
-    """returns a user with the highest correlation with user_id1"""
+
     correlation_lst = []
     otherusers_lst = list(data.keys())
     otherusers_lst.remove(user_id1)
@@ -114,6 +109,63 @@ def correlation(user_id1,user_id2):
             corr = (xy -( x * y) / n) / denominator
             return corr
 
+"""
+"""
+Input: User1(Target User), User2, r=1/2
+Output:
+Manhattan Distance between User1 and User2 if r=1
+Euclidean Distance between User1 and User2 if r=2
+
+EXCEPTION:
+If User1 already visited all the restaurants User2 visited, then the distance would be MAXINT
+If boths users did not go to any common restaurants
+"""
+def distance_method(user_id1, user_id2, r):
+    distance = 0
+    user1_business_ids = data[user_id1]["reviews"].keys()
+    user2_business_ids = data[user_id2]["reviews"].keys()
+    #If user1(target) has been to all the restaurants that user2 has been to
+    if len(set(user2_business_ids).difference(set(user1_business_ids))) == 0:
+        return MAX_INT
+
+    businesses = user1_business_ids
+    businesses.extend(user2_business_ids)
+    ratings1 = []
+    ratings2 = []
+
+    for business in businesses:
+        if (business in data[user_id1]["reviews"].keys()):
+            ratings1.append(data[user_id1]["reviews"][business]["rating"])
+        else:
+            ratings1.append(0)
+        if (business in data[user_id2]["reviews"].keys()):
+            ratings2.append(data[user_id2]["reviews"][business]["rating"])
+        else:
+            ratings2.append(0)
+
+    ratings1 = np.array(ratings1)
+    ratings2 = np.array(ratings2)
+
+
+    return np.linalg.norm(ratings1 - ratings2 ,r)
+
+
+def nearest_with_user(user1,r):
+    returnVal = {} #{correlation(float): [user1, user2,..]}
+    otherusers_lst = data.keys()
+    otherusers_lst.remove(user1)
+
+    for otheruser in otherusers_lst:
+        corr =  distance_method(user1, otheruser, r)
+
+        if (returnVal.has_key(corr)):
+            returnVal[corr].append(otheruser)
+        else:
+            returnVal[corr] = [otheruser]
+
+    return returnVal
+
+
 
 def cosine_similarity(user_1, user_2):
     business1 = dict_from_file[user_1]["reviews"].keys()
@@ -133,25 +185,24 @@ def cosine_similarity(user_1, user_2):
             ratings_2.append(dict_from_file[user_2]["reviews"][business]["rating"])
         else:
             ratings_2.append(0)
-    
+
     return float(np.dot(ratings_1, ratings_2) / sqrt(np.dot(ratings_1, ratings_1) * np.dot(ratings_2, ratings_2)))
 
 
 def highest_cosine_user(user1):
-    maximum_correlation = -1000.0
-    maximum_user = None
-
-    otherusers_lst = list(data.keys())
+    returnVal = {} #{correlation(float): [user1, user2,..]}
+    otherusers_lst = data.keys()
     otherusers_lst.remove(user1)
 
     for otheruser in otherusers_lst:
         corr = cosine_similarity(user1,otheruser)
-        if (corr > maximum_correlation):
-            maximum_correlation =corr
-            maximum_user = otheruser
 
-    print(user1, maximum_user, maximum_correlation)
-    return maximum_user
+        if (returnVal.has_key(corr)):
+            returnVal[corr].append(otheruser)
+        else:
+            returnVal[corr] = [otheruser]
+
+    return returnVal
 
 
 ###### Testing Commands ######
