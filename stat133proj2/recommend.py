@@ -168,7 +168,7 @@ def distance_method(user_id1, user_id2, r):
 
 
 def nearest_with_user(user1,r):
-    returnVal = {} #{correlation(float): [user1, user2,..]}
+    returnVal = {} # {correlation(float): [user1, user2,..]}
     otherusers_lst = data.keys()
     otherusers_lst.remove(user1)
 
@@ -188,6 +188,7 @@ def cosine_similarity(user_1, user_2):
     business1 = dict_from_file[user_1]["reviews"].keys()
     business2 = dict_from_file[user_2]["reviews"].keys()
     if len(set(business2).difference(set(business1))) == 0:
+
         return 0.0
     business1.extend(business2)
     businesses = set(business1)
