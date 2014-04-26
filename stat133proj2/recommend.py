@@ -3,6 +3,7 @@ import json
 from math import sqrt
 import numpy as np
 import sys
+import operator
 
 MAX_INT = sys.maxint
 MIN_INT = -sys.maxint - 1
@@ -19,7 +20,42 @@ def get_rating(user_id,business_id):
     return data[user_id]["reviews"][business_id]["rating"]
 
 def get_category(user_id,business_id):
+    """return a list of categories for a business"""
     return data[user_id]["reviews"][business_id]["categories"]
+
+def get_location(user_id):
+    return data[user_id]["location"]
+
+def fav_category(user_id):
+    fav_dict = {}
+    business_id_lst = list(get_business_ids(user_id).keys())
+
+    for business_id in business_id_lst:
+        if get_category(user_id,business_id): #category != None
+            for category in get_category(user_id,business_id):
+                if category not in fav_dict.keys():
+                    fav_dict[category] = 1
+                else:
+                    fav_dict[category] += 1
+
+    if not fav_dict:
+        return None
+    return max(fav_dict,key=fav_dict.get)
+
+def backup_rec(user_id1):
+    otherusers_lst = list(data.keys())
+    otherusers_lst.remove(user_id1)
+    category = fav_category(user_id1)
+    location = get_location(user_id1)
+    restaurant_lst = []
+
+    for otheruser in otherusers_lst:
+        if get_location(otheruser) == location and fav_category(otheruser) == category:
+            for business_id in list(get_business_ids(otheruser).keys()):
+                if get_category(otheruser,business_id) and (category in get_category(otheruser,business_id)):
+                    restaurant_lst.append((business_id,get_rating(otheruser,business_id)))
+    restaurant_lst.sort(key=operator.itemgetter(1),reverse=True)
+    return restaurant_lst
 
 
 """
@@ -57,15 +93,21 @@ def recommend_new_restaurant_2(user1, method):
     user1_businessids = set(data[user1]["reviews"].keys())
 
     if method == 'manhattan':
-        pass
+        closest_users = nearest_with_user(user1,1)
+        correlations = sorted(closest_users.keys(), reverse=False)
 
     elif method == 'euclidean':
-        pass
+        closest_users = nearest_with_user(user1,2)
+        correlations = sorted(closest_users.keys(), reverse=False)
 
     elif method == 'cosine':
         closest_users = highest_cosine_user(user1)
         correlations = sorted(closest_users.keys(), reverse=True)
-        for corr in correlations:
+        
+    elif method == 'pearson':
+        pass
+
+    for corr in correlations:
             #get users with same correlation to target user
             users = closest_users[corr]
             for corr_user in users:
@@ -75,14 +117,9 @@ def recommend_new_restaurant_2(user1, method):
                     rating = data[corr_user]["reviews"][unvisited_restaurant]["rating"]
                     if (rating >= 4):
                         name = data[corr_user]["reviews"][unvisited_restaurant]["name"]
-                        new_restaurants.append([unvisited_restaurant, name, rating, corr])
+                        new_restaurants.append([unvisited_restaurant, rest_name(corr_user), rating, corr])
                         if len(new_restaurants) >= 5:
                             return new_restaurants
-
-    elif method == 'pearson':
-        pass
-
-    return None
 
 """
 #The troublesome pearson correlation coefficient method
