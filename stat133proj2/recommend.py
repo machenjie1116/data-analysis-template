@@ -53,6 +53,9 @@ def recommend_new_restaurant(user_id1,method):
 2. Then go down users in descending similarity to recommend restaurants
 """
 def recommend_new_restaurant_2(user1, method):
+    new_restaurants = []
+    user1_businessids = set(data[user1]["reviews"].keys())
+
     if method == 'manhattan':
         pass
 
@@ -60,7 +63,21 @@ def recommend_new_restaurant_2(user1, method):
         pass
 
     elif method == 'cosine':
-        pass
+        closest_users = highest_cosine_user(user1)
+        correlations = sorted(closest_users.keys(), reverse=True)
+        for corr in correlations:
+            #get users with same correlation to target user
+            users = closest_users[corr]
+            for corr_user in users:
+                #get business ids of restaurants that target user never went to
+                unvisited_restaurants = set(data[corr_user]["reviews"].keys()).difference(user1_businessids)
+                for unvisited_restaurant in unvisited_restaurants:
+                    rating = data[corr_user]["reviews"][unvisited_restaurant]["rating"]
+                    if (rating >= 4):
+                        name = data[corr_user]["reviews"][unvisited_restaurant]["name"]
+                        new_restaurants.append([unvisited_restaurant, name, rating, corr])
+                        if len(new_restaurants) >= 5:
+                            return new_restaurants
 
     elif method == 'pearson':
         pass
