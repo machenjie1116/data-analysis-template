@@ -55,8 +55,8 @@ def backup_rec(user_id1):
                 if get_category(otheruser,business_id) and (category in get_category(otheruser,business_id)):
                     restaurant_lst.append((business_id,get_rating(otheruser,business_id)))
     restaurant_lst.sort(key=operator.itemgetter(1),reverse=True)
-    return restaurant_lst
-
+    for restaurant in restaurant_lst:
+        yield restaurant
 
 """
 def recommend_new_restaurant(user_id1,method):
@@ -103,7 +103,7 @@ def recommend_new_restaurant_2(user1, method):
     elif method == 'cosine':
         closest_users = highest_cosine_user(user1)
         correlations = sorted(closest_users.keys(), reverse=True)
-        
+
     elif method == 'pearson':
         pass
 

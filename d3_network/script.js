@@ -1,11 +1,12 @@
-var w = 800
+var w = 900
 var h = 700
-var r = 6
+var	r = 6
 
 
 function network(data)
 {
 	d3.json("data/" + data, function(dataset){
+		// Delete previous svg to load different city
 		d3.select("svg").remove()
 		// Initialize a default force layout, using the nodes and edges
 		var force = d3.layout.force()
@@ -16,7 +17,7 @@ function network(data)
 			.charge([-50])
 			.start();
 
-		// Create SVG element
+		// Create SVG
 		var svg = d3.select("body")
 			.append("svg")
 			.attr("width", w)
@@ -24,7 +25,7 @@ function network(data)
 
 		var colors = d3.scale.category20();
 
-		// Create edges as lines
+		// Create links between user and user reviewed businesses
 		var edges = svg.selectAll("line")
 			.data(dataset.edges)
 			.enter()
@@ -32,30 +33,28 @@ function network(data)
 			.style("stroke", "#ccc")
 			.style("stroke-width", 0.2);
 			
-		// Create nodes as circles
+		// Create nodes, sized by review count
 		var nodes = svg.selectAll("circle")
 			.data(dataset.nodes)
 			.enter()
 			.append("circle")
 			.attr("r", function(d){
 				if (d.user_reviewcount){return d.user_reviewcount}
-				else if (d.bus_reviewcount){ 
-					if (d.bus_reviewcount < 1000){return d.bus_reviewcount}
-					else {return d.bus_reviewcount/10}
-				}
+				else if (d.bus_reviewcount){return d.bus_reviewcount/3} 
 			})
 			.style("fill", function(d,i){return colors(i);})
 			.call(force.drag);
 				
-		// Draw text on the screen, 
+		// Text when hover
 		nodes.append("title")
 			.data(dataset.nodes)
 			.text(function(d){
 				content = d._name
-				if (d.bus_reviewcount){content += '\nReview Count: ' + d.bus_reviewcount*10}
+				if (d.bus_reviewcount){content += '\nReview Count: ' + d.bus_reviewcount}
+				else if (d.user_reviewcount){content += '\nReview Count: ' + d.user_reviewcount + '\nUser Match: ' + d.user_match + '\nRestaurant Recommendation: ' + d.rest_rec}
 				return content});
 		
-		// Every time the simulation "ticks", this will be called
+		// Make locations for nodes according to ticks
 		force.on("tick", function() {
 			nodes.attr("cx", function(d) { return d.x = Math.max(r, Math.min(w - r, d.x)); })
 				.attr("cy", function(d) { return d.y = Math.max(r, Math.min(h - r, d.y)); });
@@ -66,7 +65,7 @@ function network(data)
 				.attr("y2", function(d) { return d.target.y; });
 		});
 	});
-
+main()
 };
 
 function init()
@@ -78,11 +77,15 @@ function init()
     d3.select("#NewYork")
         .on("click", function(d,i) {
             network('New_York.json')
-        })   
-    d3.select("#LosAngeles")
+        }) 
+    d3.select("#Houston")
         .on("click", function(d,i) {
-            network('Los_Angeles.json')
+            network('Houston.json')
         })
-    //make the network
+    d3.select("#Boston")
+        .on("click", function(d,i) {
+            network('Boston.json')
+        })
+    //	make Berkeley default network
     network('Berkeley.json')
 };
