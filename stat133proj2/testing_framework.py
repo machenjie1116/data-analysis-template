@@ -1,16 +1,19 @@
 from recommend import *
 import numpy as np
+from multiprocessing import Pool
+import time
 
 
-def mse_all_users():
-    users = data.keys()
-    users = users[:30]
+def mse_subset_users(method, users=data.keys()[0:30]):
+    curr_time = time.time()
     MSE = []
     for user in users:
-        MSE.append(test_recommendations(user, "cosine"))
+        MSE.append(test_recommendations(user, method))
     MSE = np.array(MSE)
-    MSE = MSE[~np.isnan(MSE)]
+    total_time = time.time() - curr_time
+    print total_time, "Avg Time per User = {0}".format(total_time / len(users))
     return MSE
+
 
 """
 Computes error for user.
@@ -56,7 +59,7 @@ def test_recommendations(user, method):
         #return mean squared error of (actual ratings - predicted ratings)
         errors = actual_ratings - predicted_ratings
         rms_error = np.sqrt( float(np.sum(np.square(errors)) / n))
-        return float(np.linalg.norm(errors, 2)/ n), rms_error
+        return rms_error
 
     elif ((method == "manhattan") or (method == "euclidean")):
         r = {"manhattan":1, "euclidean":2}[method]
@@ -86,7 +89,7 @@ def test_recommendations(user, method):
         #return mean squared error of (actual ratings - predicted ratings)
         errors = actual_ratings - predicted_ratings
         rms_error = np.sqrt( float(np.sum(np.square(errors)) / n))
-        return float(np.linalg.norm(errors, 2)/ n), rms_error
+        return rms_error
 
 
 def get_predicted_rating(business_id, closest_users, correlations):
