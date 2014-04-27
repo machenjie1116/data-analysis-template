@@ -3,8 +3,20 @@ import numpy as np
 from multiprocessing import Pool
 import time
 
+def mse_all_users(method):
+    users = data.keys()
+    pool = Pool()
 
-def mse_subset_users(method, users=data.keys()[0:30]):
+    args1 = [method, users[0:20]]
+    args2 = [method, users[20:40]]
+    args3 = [method, users[40:60]]
+    result1 = pool.apply_async(mse_subset_users, [args1])
+    result2 = pool.apply_async(mse_subset_users, [args2])
+    result3 = pool.apply_async(mse_subset_users, [args3])
+
+    return test_result.get()
+
+def mse_subset_users(method, users=data.keys()[0:20]):
     curr_time = time.time()
     MSE = []
     for user in users:
@@ -21,6 +33,7 @@ The error is defined as the average of all the absolute
 differences between predicted rating for the restaurants and the actual rating.
 """
 def test_recommendations(user, method):
+    print user
     if (method not in ["manhattan", "euclidean", "cosine"]):
         raise Exception("Invalid Method")
 
@@ -100,9 +113,7 @@ def get_predicted_rating(business_id, closest_users, correlations):
                 predicted_rating = data[corr_user]["reviews"][business_id]["rating"]
                 return predicted_rating
 def main():
-    n = 100000
-    errors = np.array([4]*n)
-    print np.sqrt(float(np.sum(np.square(errors)) / n))
+    pass
 
 if __name__ == '__main__':
     main()
