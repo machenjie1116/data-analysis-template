@@ -40,6 +40,7 @@ LINKS = (('Project Report', 'nb4'),
          ('Data Analysis',  'nb3'),
          ('Data Cleaning',  'nb2'),
          ('Data Gathering', 'nb1'),
+		 ('Yelp User Network', 'http://bl.ocks.org/sclau/c278c43d8d2824342552'),
         )
 
 
