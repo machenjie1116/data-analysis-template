@@ -1,16 +1,32 @@
 from recommend import *
 import numpy as np
+from multiprocessing import Pool
+import time
+import matplotlib.pyplot as plt
 
-
-def mse_all_users():
+def mse_all_users(method):
     users = data.keys()
-    users = users[:30]
+    pool = Pool()
+
+    args1 = [method, users[0:20]]
+    args2 = [method, users[20:40]]
+    args3 = [method, users[40:60]]
+    result1 = pool.apply_async(mse_subset_users, [args1])
+    result2 = pool.apply_async(mse_subset_users, [args2])
+    result3 = pool.apply_async(mse_subset_users, [args3])
+
+    return test_result.get()
+
+def mse_subset_users(method, users=data.keys()[0:20]):
+    curr_time = time.time()
     MSE = []
     for user in users:
-        MSE.append(test_recommendations(user, "cosine"))
+        MSE.append(test_recommendations(user, method))
     MSE = np.array(MSE)
-    MSE = MSE[~np.isnan(MSE)]
+    total_time = time.time() - curr_time
+    print total_time, "Avg Time per User = {0}".format(total_time / len(users))
     return MSE
+
 
 """
 Computes error for user.
@@ -18,11 +34,12 @@ The error is defined as the average of all the absolute
 differences between predicted rating for the restaurants and the actual rating.
 """
 def test_recommendations(user, method):
+    print user
     if (method not in ["manhattan", "euclidean", "cosine"]):
         raise Exception("Invalid Method")
 
     if len(data[user]["reviews"].keys()) <= 1:
-        return np.nan
+        return 5
 
     predicted_ratings = []
     actual_ratings = []
@@ -56,7 +73,16 @@ def test_recommendations(user, method):
         #return mean squared error of (actual ratings - predicted ratings)
         errors = actual_ratings - predicted_ratings
         rms_error = np.sqrt( float(np.sum(np.square(errors)) / n))
-        return float(np.linalg.norm(errors, 2)/ n), rms_error
+        return rms_error
+        """
+        i = 0
+        for i in range(20):
+            i+=1
+            y = (i+1)*0.25
+            x = i*0.25
+            if x <= rms_error < y:
+                return (x+y)/2
+        """
 
     elif ((method == "manhattan") or (method == "euclidean")):
         r = {"manhattan":1, "euclidean":2}[method]
@@ -86,7 +112,15 @@ def test_recommendations(user, method):
         #return mean squared error of (actual ratings - predicted ratings)
         errors = actual_ratings - predicted_ratings
         rms_error = np.sqrt( float(np.sum(np.square(errors)) / n))
-        return float(np.linalg.norm(errors, 2)/ n), rms_error
+        """
+        i = 0
+        for i in range(20):
+            i+=1
+            y = (i+1)*0.25
+            x = i*0.25
+            if x <= rms_error < y:
+                return (x+y)/2
+        """
 
 
 def get_predicted_rating(business_id, closest_users, correlations):
@@ -96,10 +130,16 @@ def get_predicted_rating(business_id, closest_users, correlations):
             if business_id in data[corr_user]["reviews"].keys():
                 predicted_rating = data[corr_user]["reviews"][business_id]["rating"]
                 return predicted_rating
+                
+def Plot_Hist(method):
+    x = mse_subset_users(method, users=data.keys()[0:20])
+    Hist = plt.hist(x,bins=20,range = [0,5])
+    print x
+    return Hist
+
+
 def main():
-    n = 100000
-    errors = np.array([4]*n)
-    print np.sqrt(float(np.sum(np.square(errors)) / n))
+    pass
 
 if __name__ == '__main__':
     main()
