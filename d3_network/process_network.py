@@ -1,28 +1,31 @@
 import json
 import operator
+import sets
 
 # get users, and unique user & business id's
-def get_data():
+def get_data(city, size):
     users = {}
     business_id = []
     with open('../stat133proj2/processed_data/onlyfood_users.txt', 'rb') as infile:
         data = json.load(infile)
+        i = 0
         for user in data.keys():
             businesses = data[user]['reviews'].keys()
             user_business = []
             for business in businesses:
-                if data[user]['reviews'][business]['city'] == "Berkeley":
-                    user_business.append(business)
-                    users[user] = user_business
-                    if business not in business_id: 
-                        business_id.append(business)
+                if data[user]['reviews'][business]['city'] == city:
+                    if i < size:
+                        user_business.append(business)
+                        users[user] = user_business
+                        if business not in business_id: 
+                            business_id.append(business)
+                        i += 1
     user_id = users.keys()
     return users, user_id, business_id
 
 # get top-x businesses in a city
-def business_topx():
-    top = 5
-    (users, user_id, business_id) = get_data()
+def business_topx(top):
+    (users, user_id, business_id) = get_data(city, size)
     businesses = []
     business_count = {}
     for user in users.keys():     
@@ -52,22 +55,21 @@ def business_topx():
 
 # reindex user id's for displaying
 def reid_ids():
-    (users, user_ids, business_ids) = business_topx()
+    (users, user_ids, business_ids) = business_topx(top)
     user_id = user_ids
     brev_dict = business_ids
     bid_list = business_ids.keys()
     """
     This is the structure we want 
         user_ids = 
-        { user_id":
+        { user_id": {
           "re_id":reindex_id,
           "user_name":user_name,
           "user_reviews":user_reviews},...
         }
-        business_ids = 
-        { business_id:
+        business_ids = {business_id: {
           "re_id":reindex_id,
-          "bus_name":business_name
+          "bus_name":business_name,
           "bus_reviews":business_reviews},...
         }
     """
@@ -113,14 +115,12 @@ def create_nodes():
     nodes = []
     for user in user_ids.keys():
         nodes.append({"_name":user_ids[user]['name'], "user_reviewcount":user_ids[user]['reviews']})
-    i = 0 
     for business in business_ids.keys():
-        nodes.append({"_name":business_ids[business]['name'], "bus_reviewcount":business_ids[business]['reviews']/10})
-        i += 1
+        nodes.append({"_name":business_ids[business]['name'], "bus_reviewcount":business_ids[business]['reviews']})
     return nodes
 
-# create links from user to businesses
-def create_links():
+# create links from user to businesses, business network links
+def bus_links():
     (users, user_ids, business_ids) = reid_ids()
     links = []
     for user in users.keys():
@@ -128,9 +128,29 @@ def create_links():
             links.append({"source": user_ids[user]['re_id'], "target": business_ids[business]['re_id']})
     return links
 
+# user network links
+def user_links():
+    links = []
+    for user_1 in user_ids.keys():
+        for user_2 in user_ids.keys():
+                user1_bus = set(users[user_1])
+                user2_bus = set(users[user_2])
+                if len(user1_bus.intersection(user2_bus)) > 0:
+                    links.append({"source":user_ids[user_1]['re_id'], "target":user_ids[user_2]['re_id']})
+    return links
+
 def main():
-	new_data = {"nodes":create_nodes(), "edges":create_links()}
-	with open('data/Berkeley.json', 'w') as outfile:
+	global size; global city; global top
+	size = raw_input('Size of sample: ')
+	city = raw_input('City: ')
+	outname = raw_input('Output file name: ')
+	top = int(raw_input('Top # businesses: '))
+	bus_user = raw_input('Business or User graph? ')
+	if bus_user == "Business" or bus_user == "Bus" or bus_user == "business" or bus_user == "bus":
+		new_data = {"nodes":create_nodes(), "edges":bus_links()}
+	elif bus_user == "User" or bus_user == "user":
+		new_data = {"node":create_nodes(), "edges":user_links()}
+	with open('data/' + outname, 'w') as outfile:
 		json.dump(new_data, outfile, indent=2)
 
 if __name__=='__main__':
