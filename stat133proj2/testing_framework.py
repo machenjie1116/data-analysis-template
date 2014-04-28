@@ -2,26 +2,50 @@ from recommend import *
 import numpy as np
 from multiprocessing import Pool
 import time
+import json
 
+def chunks(l, n):
+    if n<1:
+        n=1
+    return [l[i:i+n] for i in range(0, len(l), n)]
+
+MSE = {}
+def combine_results(result):
+	MSE.update(result)
+	
+	
 def mse_all_users(method):
-    users = data.keys()
+    output_file = "./processed_data/" + method + "_error.txt"
+    users_chunked = chunks(data.keys(), 50)
+    pool = Pool()
+    
+    for users_chunk in users_chunked:
+        pool.apply_async(mse_subset_users, args=(method, users_chunk), callback=combine_results)
+    pool.close()
+    pool.join()
+    with open(output_file, "w") as outfile:
+        json.dump(MSE, outfile, indent=4)
+        	
+"""    
+def mse_all_users(method):
+    users = data.keys()[:60]
     pool = Pool()
 
-    args1 = [method, users[0:20]]
-    args2 = [method, users[20:40]]
-    args3 = [method, users[40:60]]
-    result1 = pool.apply_async(mse_subset_users, [args1])
-    result2 = pool.apply_async(mse_subset_users, [args2])
-    result3 = pool.apply_async(mse_subset_users, [args3])
+    args = []
+	#Split 42052 users into 106 groups of 400 each
+    users_split = chunks(users, 14)
+    for chunk in users_split:
+        args.append([method, chunk])
+    
+    print "Args", args
+    return pool.map_async(mse_subset_users, args)
+"""
 
-    return test_result.get()
-
-def mse_subset_users(method, users=data.keys()[0:20]):
+def mse_subset_users(method, users):
     curr_time = time.time()
-    MSE = []
+    MSE = {}
     for user in users:
-        MSE.append(test_recommendations(user, method))
-    MSE = np.array(MSE)
+        MSE[user] = test_recommendations(user, method)
     total_time = time.time() - curr_time
     print total_time, "Avg Time per User = {0}".format(total_time / len(users))
     return MSE
@@ -33,8 +57,9 @@ The error is defined as the average of all the absolute
 differences between predicted rating for the restaurants and the actual rating.
 """
 def test_recommendations(user, method):
-    print user
+    #print user
     if (method not in ["manhattan", "euclidean", "cosine"]):
+        #print "Method: ", method
         raise Exception("Invalid Method")
 
     if len(data[user]["reviews"].keys()) <= 1:
@@ -71,7 +96,7 @@ def test_recommendations(user, method):
         n = len(actual_ratings)
         #return mean squared error of (actual ratings - predicted ratings)
         errors = actual_ratings - predicted_ratings
-        rms_error = np.sqrt( float(np.sum(np.square(errors)) / n))
+        rms_error = np.sqrt(float(np.sum(np.square(errors)) / n))
         return rms_error
 
     elif ((method == "manhattan") or (method == "euclidean")):
@@ -113,7 +138,7 @@ def get_predicted_rating(business_id, closest_users, correlations):
                 predicted_rating = data[corr_user]["reviews"][business_id]["rating"]
                 return predicted_rating
 def main():
-    pass
+    mse_all_users("manhattan")
 
 if __name__ == '__main__':
     main()
