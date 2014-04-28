@@ -2,6 +2,7 @@ from recommend import *
 import numpy as np
 from multiprocessing import Pool
 import time
+<<<<<<< HEAD
 import json
 
 def chunks(l, n):
@@ -14,6 +15,10 @@ def combine_results(result):
 	MSE.update(result)
 	
 	
+=======
+import matplotlib.pyplot as plt
+
+>>>>>>> ce24b9a7c8e410a2c6f9478dddb497c9701873f7
 def mse_all_users(method):
     output_file = "./processed_data/" + method + "_error.txt"
     users_chunked = chunks(data.keys(), 50)
@@ -63,7 +68,7 @@ def test_recommendations(user, method):
         raise Exception("Invalid Method")
 
     if len(data[user]["reviews"].keys()) <= 1:
-        return np.nan
+        return 5
 
     predicted_ratings = []
     actual_ratings = []
@@ -98,6 +103,15 @@ def test_recommendations(user, method):
         errors = actual_ratings - predicted_ratings
         rms_error = np.sqrt(float(np.sum(np.square(errors)) / n))
         return rms_error
+        """
+        i = 0
+        for i in range(20):
+            i+=1
+            y = (i+1)*0.25
+            x = i*0.25
+            if x <= rms_error < y:
+                return (x+y)/2
+        """
 
     elif ((method == "manhattan") or (method == "euclidean")):
         r = {"manhattan":1, "euclidean":2}[method]
@@ -127,7 +141,15 @@ def test_recommendations(user, method):
         #return mean squared error of (actual ratings - predicted ratings)
         errors = actual_ratings - predicted_ratings
         rms_error = np.sqrt( float(np.sum(np.square(errors)) / n))
-        return rms_error
+        """
+        i = 0
+        for i in range(20):
+            i+=1
+            y = (i+1)*0.25
+            x = i*0.25
+            if x <= rms_error < y:
+                return (x+y)/2
+        """
 
 
 def get_predicted_rating(business_id, closest_users, correlations):
@@ -137,6 +159,14 @@ def get_predicted_rating(business_id, closest_users, correlations):
             if business_id in data[corr_user]["reviews"].keys():
                 predicted_rating = data[corr_user]["reviews"][business_id]["rating"]
                 return predicted_rating
+                
+def Plot_Hist(method):
+    x = mse_subset_users(method, users=data.keys()[0:20])
+    Hist = plt.hist(x,bins=20,range = [0,5])
+    print x
+    return Hist
+
+
 def main():
     mse_all_users("manhattan")
 
