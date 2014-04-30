@@ -117,7 +117,7 @@ def recommend_new_restaurant_2(user1, method):
                     rating = data[corr_user]["reviews"][unvisited_restaurant]["rating"]
                     if (rating >= 4):
                         name = data[corr_user]["reviews"][unvisited_restaurant]["name"]
-                        new_restaurants.append([unvisited_restaurant, rest_name(corr_user), rating, corr])
+                        new_restaurants.append([unvisited_restaurant, name, corr_user, rating, corr])
                         if len(new_restaurants) >= 5:
                             return new_restaurants
 
