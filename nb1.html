@@ -1830,10 +1830,56 @@ Yelp Data Analysis Project            </a>
 <p>Harish Kumar Palaniswamy</p>
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Raw-Data">Raw Data<a class="anchor-link" href="#Raw-Data">&#182;</a></h1>
+<p><strong>Creating initial folders for storing data</strong></p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[89]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">bash</span>
+<span class="n">mkdir</span> <span class="o">../</span><span class="n">data</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">raw</span>
+
+<span class="n">ls</span>
+</pre></div>
+
+</div>
 </div>
 
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+NB1_data_gathering.ipynb
+NB2_data_cleaning.ipynb
+NB3_data_analysis.ipynb
+NB4_project_report.ipynb
+README.md
+
+</pre>
+</div>
+</div>
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stderr">
+<pre>
+mkdir: cannot create directory ‘../data’: File exists
+mkdir: cannot create directory ‘../data/raw’: File exists
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="raw-data">Raw Data</h1>
 <p>The dataset is a single gzip-compressed file, composed of one json-object per line. Every object contains a 'type' field, which tells you whether it is a business, a user, or a review.</p>
 </div>
 <div class="cell border-box-sizing code_cell vbox">
@@ -1862,10 +1908,7 @@ In&nbsp;[80]:
 
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="User">User<a class="anchor-link" href="#User">&#182;</a></h2>
-</div>
-
-<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="user">User</h2>
 <p>User objects contain aggregate information about a single user across all of Yelp (including businesses and reviews not in this dataset)</p>
 </div>
 {
