@@ -1720,7 +1720,7 @@ init_mathjax();
             <meta property="og:type" content="article"/>
             <meta property="og:title" content="Data Gathering"/>
             <meta property="og:url" content="http://machenjie1116.github.io/data-analysis-template/nb1.html"/>
-            <meta property="og:description" content="In this notebook, you'll create the directory structure for your project download the raw data for your project write functions and classes to transform raw data (e.g in XML, jason, etc.) into data frames explain what your are doing Team members responsible for this notebook: List the team ..."/>
+            <meta property="og:description" content="In this notebook, you'll create the directory structure for your project download the raw data for your project write functions and classes to transform raw data (e.g in XML, jason, etc.) into data frames explain what your are doing Team members responsible for this notebook: Harish Kumar Palaniswamy ..."/>
 
     <!-- Bootstrap -->
         <link rel="stylesheet" href="http://machenjie1116.github.io/data-analysis-template/theme/css/bootstrap.min.css" type="text/css"/>
@@ -1827,13 +1827,227 @@ Yelp Data Analysis Project            </a>
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="team-members-responsible-for-this-notebook">Team members responsible for this notebook:</h2>
-<p>List the team members contributing to this notebook, along with their responsabilities:</p>
-<ul>
-<li>team member 1 <strong>name</strong>: team member 1 <strong>responsabilities</strong></li>
-<li>team member 2 <strong>name</strong>: team member 2 <strong>responsabilities</strong></li>
-<li>etc.</li>
-</ul>
-<p>I advise you to work at least in pairs for each project notebook, as you did for the homework assignments. Of course, all team members may participate to each notebook.</p>
+<p>Harish Kumar Palaniswamy</p>
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Raw-Data">Raw Data<a class="anchor-link" href="#Raw-Data">&#182;</a></h1>
+</div>
+
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The dataset is a single gzip-compressed file, composed of one json-object per line. Every object contains a 'type' field, which tells you whether it is a business, a user, or a review.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[80]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">pprint</span>
+<span class="n">rawdata_location</span> <span class="o">=</span> <span class="s">&quot;/home/oski/data-analysis-template/data/raw/yelp_academic_dataset.json&quot;</span>
+<span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">rawdata_location</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="c">#print &quot;User: &quot;, user</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">474233</span><span class="p">):</span>
+        <span class="n">business</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="c">#print &quot;\n\n\Business: &quot;, line</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">400000</span><span class="p">):</span>
+        <span class="n">review</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="c">#print &quot;\n\n Review: &quot;, review</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="User">User<a class="anchor-link" href="#User">&#182;</a></h2>
+</div>
+
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>User objects contain aggregate information about a single user across all of Yelp (including businesses and reviews not in this dataset)</p>
+</div>
+{
+  'type': 'user',
+  'user_id': (unique user identifier),
+  'name': (first name, last initial, like 'Matt J.'),
+  'review_count': (review count),
+  'average_stars': (floating point average, like 4.31),
+  'votes': {
+    'useful': (count of useful votes across all reviews),
+    'funny': (count of funny votes across all reviews),
+    'cool': (count of cool votes across all reviews)
+  }
+}
+
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[83]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="n">user</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt output_prompt">
+    Out[83]:</div>
+<div class="box-flex1 output_subarea output_pyout">
+
+
+<pre>
+{u&apos;average_stars&apos;: 3.2258064516129,
+ u&apos;name&apos;: u&apos;LiiLii C.&apos;,
+ u&apos;review_count&apos;: 31,
+ u&apos;type&apos;: u&apos;user&apos;,
+ u&apos;url&apos;: u&apos;http://www.yelp.com/user_details?userid=JkeCKyEaQlbLd9uZYl4DjA&apos;,
+ u&apos;user_id&apos;: u&apos;JkeCKyEaQlbLd9uZYl4DjA&apos;,
+ u&apos;votes&apos;: {u&apos;cool&apos;: 18, u&apos;funny&apos;: 15, u&apos;useful&apos;: 48}}
+</pre>
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="business">Business</h2>
+<p>Business objects contain basic information about local businesses. The 'business_id' field can be used with the Yelp API. The fields are as follows,</p>
+</div>
+{
+  'type': 'business',
+  'business_id': (a unique identifier for this business),
+  'name': (the full business name),
+  'neighborhoods': (a list of neighborhood names, might be empty),
+  'full_address': (localized address),
+  'city': (city),
+  'state': (state),
+  'latitude': (latitude),
+  'longitude': (longitude),
+  'stars': (star rating, rounded to half-stars),
+  'review_count': (review count),
+  'photo_url': (photo url),
+  'categories': [(localized category names)]
+  'open': (is the business still open for business?),
+  'schools': (nearby universities),
+  'url': (yelp url)
+}
+
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[84]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="n">business</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt output_prompt">
+    Out[84]:</div>
+<div class="box-flex1 output_subarea output_pyout">
+
+
+<pre>
+{u&apos;business_id&apos;: u&apos;iWMe4FQkftu4fzOyzd0dSQ&apos;,
+ u&apos;categories&apos;: [u&apos;Shopping&apos;, u&apos;Local Flavor&apos;, u&apos;Toy Stores&apos;],
+ u&apos;city&apos;: u&apos;San Luis Obispo&apos;,
+ u&apos;full_address&apos;: u&apos;786 Higuera St\nSan Luis Obispo, CA 93401&apos;,
+ u&apos;latitude&apos;: 35.2797924,
+ u&apos;longitude&apos;: -120.6632318,
+ u&apos;name&apos;: u&apos;Turn to Nature&apos;,
+ u&apos;neighborhoods&apos;: [],
+ u&apos;open&apos;: True,
+ u&apos;photo_url&apos;: u&apos;http://s3-media2.ak.yelpcdn.com/bphoto/DsER4g1PUYwY2-PLpYsAnw/ms.jpg&apos;,
+ u&apos;review_count&apos;: 2,
+ u&apos;schools&apos;: [u&apos;California Polytechnic State University&apos;],
+ u&apos;stars&apos;: 5.0,
+ u&apos;state&apos;: u&apos;CA&apos;,
+ u&apos;type&apos;: u&apos;business&apos;,
+ u&apos;url&apos;: u&apos;http://www.yelp.com/biz/turn-to-nature-san-luis-obispo&apos;}
+</pre>
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Review">Review<a class="anchor-link" href="#Review">&#182;</a></h2>
+</div>
+
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Review objects contain the review text, the star rating, and information on votes Yelp users have cast on the review. We can use user_id to associate a particular review with others by the same user. Likewise, we can use business_id to associate this review with others of the same business.</p>
+</div>
+{
+  'type': 'review',
+  'business_id': (the identifier of the reviewed business),
+  'user_id': (the identifier of the authoring user),
+  'stars': (star rating, integer 1-5),
+  'text': (review text),
+  'date': (date, formatted like '2011-04-19'),
+  'votes': {
+    'useful': (count of useful votes),
+    'funny': (count of funny votes),
+    'cool': (count of cool votes)
+  }
+}
+
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[85]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="n">review</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt output_prompt">
+    Out[85]:</div>
+<div class="box-flex1 output_subarea output_pyout">
+
+
+<pre>
+{u&apos;business_id&apos;: u&apos;huHxwjbkyEf1nTam-o2BOQ&apos;,
+ u&apos;date&apos;: u&apos;2012-03-22&apos;,
+ u&apos;review_id&apos;: u&apos;AtxcKzzazdxLXcUocUDlaw&apos;,
+ u&apos;stars&apos;: 5,
+ u&apos;text&apos;: u&quot;Delicious, Fast and Healthy. I&apos;ve been looking for a restaurant like this for a long time. I really like the pickled veggies and pork.&quot;,
+ u&apos;type&apos;: u&apos;review&apos;,
+ u&apos;user_id&apos;: u&apos;XbNUd-QY3h22VH9Y9mSywg&apos;,
+ u&apos;votes&apos;: {u&apos;cool&apos;: 0, u&apos;funny&apos;: 0, u&apos;useful&apos;: 0}}
+</pre>
+
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="instructions">Instructions:</h2>

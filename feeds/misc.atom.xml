@@ -290,13 +290,227 @@ In&amp;nbsp;[]:
 &lt;/div&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;h2 id="team-members-responsible-for-this-notebook"&gt;Team members responsible for this notebook:&lt;/h2&gt;
-&lt;p&gt;List the team members contributing to this notebook, along with their responsabilities:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;team member 1 &lt;strong&gt;name&lt;/strong&gt;: team member 1 &lt;strong&gt;responsabilities&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;team member 2 &lt;strong&gt;name&lt;/strong&gt;: team member 2 &lt;strong&gt;responsabilities&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;etc.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;I advise you to work at least in pairs for each project notebook, as you did for the homework assignments. Of course, all team members may participate to each notebook.&lt;/p&gt;
+&lt;p&gt;Harish Kumar Palaniswamy&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h1 id="Raw-Data"&gt;Raw Data&lt;a class="anchor-link" href="#Raw-Data"&gt;&amp;#182;&lt;/a&gt;&lt;/h1&gt;
+&lt;/div&gt;
+
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;The dataset is a single gzip-compressed file, composed of one json-object per line. Every object contains a 'type' field, which tells you whether it is a business, a user, or a review.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell vbox"&gt;
+&lt;div class="input hbox"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[80]:
+&lt;/div&gt;
+&lt;div class="input_area box-flex1"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nn"&gt;pprint&lt;/span&gt;
+&lt;span class="n"&gt;rawdata_location&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/home/oski/data-analysis-template/data/raw/yelp_academic_dataset.json&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;fp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rawdata_location&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fp&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loads&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="c"&gt;#print &amp;quot;User: &amp;quot;, user&lt;/span&gt;
+    &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;474233&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;business&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loads&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="c"&gt;#print &amp;quot;\n\n\Business: &amp;quot;, line&lt;/span&gt;
+    &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;400000&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;review&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;loads&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="c"&gt;#print &amp;quot;\n\n Review: &amp;quot;, review&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="User"&gt;User&lt;a class="anchor-link" href="#User"&gt;&amp;#182;&lt;/a&gt;&lt;/h2&gt;
+&lt;/div&gt;
+
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;User objects contain aggregate information about a single user across all of Yelp (including businesses and reviews not in this dataset)&lt;/p&gt;
+&lt;/div&gt;
+{
+  'type': 'user',
+  'user_id': (unique user identifier),
+  'name': (first name, last initial, like 'Matt J.'),
+  'review_count': (review count),
+  'average_stars': (floating point average, like 4.31),
+  'votes': {
+    'useful': (count of useful votes across all reviews),
+    'funny': (count of funny votes across all reviews),
+    'cool': (count of cool votes across all reviews)
+  }
+}
+
+&lt;div class="cell border-box-sizing code_cell vbox"&gt;
+&lt;div class="input hbox"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[83]:
+&lt;/div&gt;
+&lt;div class="input_area box-flex1"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;user&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="vbox output_wrapper"&gt;
+&lt;div class="output vbox"&gt;
+
+
+&lt;div class="hbox output_area"&gt;&lt;div class="prompt output_prompt"&gt;
+    Out[83]:&lt;/div&gt;
+&lt;div class="box-flex1 output_subarea output_pyout"&gt;
+
+
+&lt;pre&gt;
+{u&amp;apos;average_stars&amp;apos;: 3.2258064516129,
+ u&amp;apos;name&amp;apos;: u&amp;apos;LiiLii C.&amp;apos;,
+ u&amp;apos;review_count&amp;apos;: 31,
+ u&amp;apos;type&amp;apos;: u&amp;apos;user&amp;apos;,
+ u&amp;apos;url&amp;apos;: u&amp;apos;http://www.yelp.com/user_details?userid=JkeCKyEaQlbLd9uZYl4DjA&amp;apos;,
+ u&amp;apos;user_id&amp;apos;: u&amp;apos;JkeCKyEaQlbLd9uZYl4DjA&amp;apos;,
+ u&amp;apos;votes&amp;apos;: {u&amp;apos;cool&amp;apos;: 18, u&amp;apos;funny&amp;apos;: 15, u&amp;apos;useful&amp;apos;: 48}}
+&lt;/pre&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="business"&gt;Business&lt;/h2&gt;
+&lt;p&gt;Business objects contain basic information about local businesses. The 'business_id' field can be used with the Yelp API. The fields are as follows,&lt;/p&gt;
+&lt;/div&gt;
+{
+  'type': 'business',
+  'business_id': (a unique identifier for this business),
+  'name': (the full business name),
+  'neighborhoods': (a list of neighborhood names, might be empty),
+  'full_address': (localized address),
+  'city': (city),
+  'state': (state),
+  'latitude': (latitude),
+  'longitude': (longitude),
+  'stars': (star rating, rounded to half-stars),
+  'review_count': (review count),
+  'photo_url': (photo url),
+  'categories': [(localized category names)]
+  'open': (is the business still open for business?),
+  'schools': (nearby universities),
+  'url': (yelp url)
+}
+
+&lt;div class="cell border-box-sizing code_cell vbox"&gt;
+&lt;div class="input hbox"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[84]:
+&lt;/div&gt;
+&lt;div class="input_area box-flex1"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;business&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="vbox output_wrapper"&gt;
+&lt;div class="output vbox"&gt;
+
+
+&lt;div class="hbox output_area"&gt;&lt;div class="prompt output_prompt"&gt;
+    Out[84]:&lt;/div&gt;
+&lt;div class="box-flex1 output_subarea output_pyout"&gt;
+
+
+&lt;pre&gt;
+{u&amp;apos;business_id&amp;apos;: u&amp;apos;iWMe4FQkftu4fzOyzd0dSQ&amp;apos;,
+ u&amp;apos;categories&amp;apos;: [u&amp;apos;Shopping&amp;apos;, u&amp;apos;Local Flavor&amp;apos;, u&amp;apos;Toy Stores&amp;apos;],
+ u&amp;apos;city&amp;apos;: u&amp;apos;San Luis Obispo&amp;apos;,
+ u&amp;apos;full_address&amp;apos;: u&amp;apos;786 Higuera St\nSan Luis Obispo, CA 93401&amp;apos;,
+ u&amp;apos;latitude&amp;apos;: 35.2797924,
+ u&amp;apos;longitude&amp;apos;: -120.6632318,
+ u&amp;apos;name&amp;apos;: u&amp;apos;Turn to Nature&amp;apos;,
+ u&amp;apos;neighborhoods&amp;apos;: [],
+ u&amp;apos;open&amp;apos;: True,
+ u&amp;apos;photo_url&amp;apos;: u&amp;apos;http://s3-media2.ak.yelpcdn.com/bphoto/DsER4g1PUYwY2-PLpYsAnw/ms.jpg&amp;apos;,
+ u&amp;apos;review_count&amp;apos;: 2,
+ u&amp;apos;schools&amp;apos;: [u&amp;apos;California Polytechnic State University&amp;apos;],
+ u&amp;apos;stars&amp;apos;: 5.0,
+ u&amp;apos;state&amp;apos;: u&amp;apos;CA&amp;apos;,
+ u&amp;apos;type&amp;apos;: u&amp;apos;business&amp;apos;,
+ u&amp;apos;url&amp;apos;: u&amp;apos;http://www.yelp.com/biz/turn-to-nature-san-luis-obispo&amp;apos;}
+&lt;/pre&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="Review"&gt;Review&lt;a class="anchor-link" href="#Review"&gt;&amp;#182;&lt;/a&gt;&lt;/h2&gt;
+&lt;/div&gt;
+
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Review objects contain the review text, the star rating, and information on votes Yelp users have cast on the review. We can use user_id to associate a particular review with others by the same user. Likewise, we can use business_id to associate this review with others of the same business.&lt;/p&gt;
+&lt;/div&gt;
+{
+  'type': 'review',
+  'business_id': (the identifier of the reviewed business),
+  'user_id': (the identifier of the authoring user),
+  'stars': (star rating, integer 1-5),
+  'text': (review text),
+  'date': (date, formatted like '2011-04-19'),
+  'votes': {
+    'useful': (count of useful votes),
+    'funny': (count of funny votes),
+    'cool': (count of cool votes)
+  }
+}
+
+&lt;div class="cell border-box-sizing code_cell vbox"&gt;
+&lt;div class="input hbox"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[85]:
+&lt;/div&gt;
+&lt;div class="input_area box-flex1"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;review&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="vbox output_wrapper"&gt;
+&lt;div class="output vbox"&gt;
+
+
+&lt;div class="hbox output_area"&gt;&lt;div class="prompt output_prompt"&gt;
+    Out[85]:&lt;/div&gt;
+&lt;div class="box-flex1 output_subarea output_pyout"&gt;
+
+
+&lt;pre&gt;
+{u&amp;apos;business_id&amp;apos;: u&amp;apos;huHxwjbkyEf1nTam-o2BOQ&amp;apos;,
+ u&amp;apos;date&amp;apos;: u&amp;apos;2012-03-22&amp;apos;,
+ u&amp;apos;review_id&amp;apos;: u&amp;apos;AtxcKzzazdxLXcUocUDlaw&amp;apos;,
+ u&amp;apos;stars&amp;apos;: 5,
+ u&amp;apos;text&amp;apos;: u&amp;quot;Delicious, Fast and Healthy. I&amp;apos;ve been looking for a restaurant like this for a long time. I really like the pickled veggies and pork.&amp;quot;,
+ u&amp;apos;type&amp;apos;: u&amp;apos;review&amp;apos;,
+ u&amp;apos;user_id&amp;apos;: u&amp;apos;XbNUd-QY3h22VH9Y9mSywg&amp;apos;,
+ u&amp;apos;votes&amp;apos;: {u&amp;apos;cool&amp;apos;: 0, u&amp;apos;funny&amp;apos;: 0, u&amp;apos;useful&amp;apos;: 0}}
+&lt;/pre&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
 &lt;/div&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;h2 id="instructions"&gt;Instructions:&lt;/h2&gt;
