@@ -1835,13 +1835,13 @@ Yelp Data Analysis Project            </a>
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[89]:
+In&nbsp;[5]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">bash</span>
-<span class="n">mkdir</span> <span class="o">../</span><span class="n">data</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">raw</span>
+<span class="n">mkdir</span> <span class="o">../</span><span class="n">data</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">raw</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">cleaned</span>
 
-<span class="n">ls</span>
+<span class="nb">dir</span>
 </pre></div>
 
 </div>
@@ -1854,11 +1854,8 @@ In&nbsp;[89]:
 <div class="hbox output_area"><div class="prompt"></div>
 <div class="box-flex1 output_subarea output_stream output_stdout">
 <pre>
-NB1_data_gathering.ipynb
-NB2_data_cleaning.ipynb
-NB3_data_analysis.ipynb
-NB4_project_report.ipynb
-README.md
+NB1_data_gathering.ipynb  NB3_data_analysis.ipynb   README.md
+NB2_data_cleaning.ipynb   NB4_project_report.ipynb
 
 </pre>
 </div>
@@ -1869,6 +1866,7 @@ README.md
 <pre>
 mkdir: cannot create directory ‘../data’: File exists
 mkdir: cannot create directory ‘../data/raw’: File exists
+mkdir: cannot create directory ‘../data/cleaned’: File exists
 
 </pre>
 </div>
@@ -1885,11 +1883,11 @@ mkdir: cannot create directory ‘../data/raw’: File exists
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[80]:
+In&nbsp;[19]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">pprint</span>
-<span class="n">rawdata_location</span> <span class="o">=</span> <span class="s">&quot;/home/oski/data-analysis-template/data/raw/yelp_academic_dataset.json&quot;</span>
+<span class="n">rawdata_location</span> <span class="o">=</span> <span class="s">&quot;../data/raw/yelp_academic_dataset.json&quot;</span>
 <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">rawdata_location</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
@@ -1927,7 +1925,7 @@ In&nbsp;[80]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[83]:
+In&nbsp;[22]:
 </div>
 <div class="input_area box-flex1">
 <div class="highlight-ipynb"><pre class="ipynb"><span class="n">user</span>
@@ -1941,7 +1939,7 @@ In&nbsp;[83]:
 
 
 <div class="hbox output_area"><div class="prompt output_prompt">
-    Out[83]:</div>
+    Out[22]:</div>
 <div class="box-flex1 output_subarea output_pyout">
 
 
@@ -2039,20 +2037,9 @@ In&nbsp;[84]:
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Review objects contain the review text, the star rating, and information on votes Yelp users have cast on the review. We can use user_id to associate a particular review with others by the same user. Likewise, we can use business_id to associate this review with others of the same business.</p>
 </div>
-{
-  'type': 'review',
-  'business_id': (the identifier of the reviewed business),
-  'user_id': (the identifier of the authoring user),
-  'stars': (star rating, integer 1-5),
-  'text': (review text),
-  'date': (date, formatted like '2011-04-19'),
-  'votes': {
-    'useful': (count of useful votes),
-    'funny': (count of funny votes),
-    'cool': (count of cool votes)
-  }
-}
-
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>{ 'type': 'test' 'type': 'review', 'business_id': (the identifier of the reviewed business), 'user_id': (the identifier of the authoring user), 'stars': (star rating, integer 1-5), 'text': (review text), 'date': (date, formatted like '2011-04-19'), 'votes': { 'useful': (count of useful votes), 'funny': (count of funny votes), 'cool': (count of cool votes) } }</p>
+</div>
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
@@ -2093,58 +2080,52 @@ In&nbsp;[85]:
 
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="instructions">Instructions:</h2>
-<p>In <strong>markdown cells</strong>, you'll</p>
-<ul>
-<li>list and describe the data sources for your class project
-<ul>
-<li>provide the data urls</li>
-<li>describe the file formats</li>
-<li>explain the data content of each file</li>
-</ul></li>
-</ul>
-<p><strong>Remark:</strong> If your data is not directly available through the web (for instance, you requested it from a company, or got it from Inna or Henry), place you data into your personal bdrive, and provide a link to it, that you'll use in this notebook to download it into the data folder, as explained below).</p>
-<p>In <strong>code cells</strong>, you'll</p>
-<ul>
-<li><p>create the following directories:</p>
-<pre><code>./data
-./data/raw        # to store your raw data
-./data/cleaned    # to store the cleanned data
-./data/simulated  # to store simulated data
-./visualizations  # to store your plots</code></pre></li>
-<li><p>display samples of your data files (e.g. for a csv files, use data frames and the <code>head</code> method)</p></li>
-<li><p>Write <strong>scripts</strong> into the <code>./script</code> directory using the he <strong>magic command</strong></p>
-<p>%%file ./script/file_name</p></li>
-</ul>
-<p>Your scripts should contain <strong>functions</strong> and <strong>objects</strong> allowing you to</p>
-<ul>
-<li><p>download the actual raw data in the directory <code>./data/raw</code></p></li>
-<li><p>load the downloaded the raw data files into data frames</p></li>
-</ul>
-<p>This way, the functions and objects contained in your scripts will be accessible in other notebooks through the <code>import</code> command in Python (see example below).</p>
-<p><strong>Remark 1:</strong> In the code cells, you may use Python, R, or Bash, as you find more convenient.</p>
-<p><strong>Remark 2:</strong> Try to make your notebook as readable and usable (by others) as possible.</p>
-</div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Example">Example<a class="anchor-link" href="#Example">&#182;</a></h2>
-</div>
-
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Here is an example of how to package your code into scripts reusable in other notebook.</p>
-<p>You'll need to do something similar to that. You'll also need to write explanations as outlined above in markdown cells.</p>
-</div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="creating-the-directory-structure">Creating the directory structure</h3>
+<p>Since the reviews contain the user ids and business ids, we only need the review objects and thus, can get rid of the review and user objects. Also, we can now group each reviews by their user id so that we can easily see the reviews for each particular user.</p>
 </div>
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[2]:
+In&nbsp;[23]:
 </div>
 <div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">bash</span>
-<span class="n">mkdir</span> <span class="o">../</span><span class="n">script</span> <span class="o">../</span><span class="n">data</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">raw</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">cleaned</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">simulated</span> <span class="o">../</span><span class="n">visualizations</span>
-<span class="n">ls</span> <span class="o">-</span><span class="n">r</span>
+<div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">json</span>
+<span class="n">rawdata_location</span> <span class="o">=</span> <span class="s">&quot;../data/raw/yelp_academic_dataset.json&quot;</span>
+<span class="k">def</span> <span class="nf">read_yelpdata</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="s">&quot;../data/raw/yelp_academic_dataset.json&quot;</span><span class="p">):</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="c">#read each object line by line</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;business&#39;</span><span class="p">:</span>
+                <span class="k">pass</span> <span class="c">#ignore business objects</span>
+            <span class="k">elif</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;review&#39;</span><span class="p">:</span>
+                <span class="n">business_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;business_id&#39;</span><span class="p">]</span>
+                <span class="n">user_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;user_id&#39;</span><span class="p">]</span>
+                <span class="n">rating</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;stars&#39;</span><span class="p">]</span>
+                
+                
+                <span class="k">if</span> <span class="n">users</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+                    <span class="n">users</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;rating&quot;</span><span class="p">:</span><span class="n">rating</span><span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">users</span><span class="p">[</span><span class="n">user_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="n">users</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="n">users</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;rating&quot;</span><span class="p">:</span> <span class="n">rating</span><span class="p">}</span>
+            <span class="k">elif</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;user&#39;</span><span class="p">:</span>
+                <span class="k">pass</span> <span class="c">#ignore user objects as well </span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c">#should never trigger</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unknown type&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">users</span>
+    
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">read_yelpdata</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;Processed {0} users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;../data/cleaned/users1.txt&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -2157,23 +2138,7 @@ In&nbsp;[2]:
 <div class="hbox output_area"><div class="prompt"></div>
 <div class="box-flex1 output_subarea output_stream output_stdout">
 <pre>
-visualizations
-script
-README.md
-NB4_project_report.ipynb
-NB3_data_analysis.ipynb
-NB2_data_cleaning.ipynb
-NB1_data_gathering.ipynb
-data
-
-</pre>
-</div>
-</div>
-
-<div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_stream output_stderr">
-<pre>
-mkdir: cannot create directory ‘../data’: File exists
+Processed 130873 users
 
 </pre>
 </div>
@@ -2184,49 +2149,22 @@ mkdir: cannot create directory ‘../data’: File exists
 
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Downloading-and-displaying-raw-data">Downloading and displaying raw data<a class="anchor-link" href="#Downloading-and-displaying-raw-data">&#182;</a></h3>
-</div>
+<p>The data dumped is of the form is of the following schema</p>
+<p>{</p>
+<pre><code>&quot;user_id&quot;: {
+        &quot;business_id&quot;: Rating that user left for business associated with this business ID, from 1-5
 
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In this example, I am using R. You want to use Python instead.</p>
+}</code></pre>
+<p>}</p>
 </div>
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[4]:
+In&nbsp;[15]:
 </div>
 <div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%</span><span class="k">load_ext</span> <span class="n">rmagic</span>
-</pre></div>
-
-</div>
-</div>
-
-</div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>TO DO:</strong> list sources, display data sample, explain data content, etc.</p>
-</div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We now download an XML source containing plant data, and display an typical plant entry, represented as a XML node:</p>
-</div>
-<div class="cell border-box-sizing code_cell vbox">
-<div class="input hbox">
-<div class="prompt input_prompt">
-In&nbsp;[6]:
-</div>
-<div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">R</span>
-<span class="n">library</span><span class="p">(</span><span class="n">XML</span><span class="p">)</span>
-<span class="n">plant_url</span>  <span class="o">=</span>  <span class="s">&#39;http://www.stat.berkeley.edu/classes/s133/data/plant_catalog.xml&#39;</span>
-<span class="n">plant_file</span> <span class="o">=</span> <span class="s">&#39;./data/raw/plant.xml&#39;</span>
-
-<span class="n">download</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="n">plant_url</span><span class="p">,</span> <span class="n">plant_file</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;curl&quot;</span><span class="p">)</span>
-
-<span class="n">xml_doc</span>   <span class="o">=</span> <span class="n">xmlParse</span><span class="p">(</span><span class="n">plant_file</span><span class="p">)</span>
-<span class="n">root_node</span> <span class="o">=</span> <span class="n">xmlRoot</span><span class="p">(</span><span class="n">xml_doc</span><span class="p">)</span>
-
-<span class="n">plant_nodes</span> <span class="o">=</span> <span class="n">xmlChildren</span><span class="p">(</span><span class="n">root_node</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">plant_nodes</span><span class="p">[[</span><span class="mi">1</span><span class="p">]])</span>
+<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">bash</span>
+<span class="n">head</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">cleaned</span><span class="o">/</span><span class="n">users1</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 
 </div>
@@ -2237,28 +2175,20 @@ In&nbsp;[6]:
 
 
 <div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_display_data">
-
-
+<div class="box-flex1 output_subarea output_stream output_stdout">
 <pre>
-
-Attaching package: ‘XML’
-
-The following object(s) are masked from ‘package:tools’:
-
-    toHTML
-
-&lt;PLANT&gt;
-  &lt;COMMON&gt;Bloodroot&lt;/COMMON&gt;
-  &lt;BOTANICAL&gt;Sanguinaria canadensis&lt;/BOTANICAL&gt;
-  &lt;ZONE&gt;4&lt;/ZONE&gt;
-  &lt;LIGHT&gt;Mostly Shady&lt;/LIGHT&gt;
-  &lt;PRICE&gt;$2.44&lt;/PRICE&gt;
-  &lt;AVAILABILITY&gt;031599&lt;/AVAILABILITY&gt;
-&lt;/PLANT&gt; 
+{
+    &quot;---1lKK3aKOuomHnwAkAow&quot;: {
+        &quot;KG3Y2qyrru2SZxR_c5gHyg&quot;: 5, 
+        &quot;VFslQjSgrw4Mu5_Q1xk1KQ&quot;: 5
+    }, 
+    &quot;---crLYmdoy-u29cBZjWfg&quot;: {
+        &quot;0iSN6PgiXKP4oSVL037ATg&quot;: 5, 
+        &quot;gbeCaZrCz1X5RcxX6GC1ng&quot;: 4
+    }, 
+    &quot;--1PqS9ZNtl5NMX-xKWg8w&quot;: {
 
 </pre>
-
 </div>
 </div>
 
@@ -2267,125 +2197,73 @@ The following object(s) are masked from ‘package:tools’:
 
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Loading-raw-data-into-data-frames">Loading raw data into data frames<a class="anchor-link" href="#Loading-raw-data-into-data-frames">&#182;</a></h3>
-</div>
-
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The dataframe column labels are the tags of the XML nodes, contained in the plant XML nodes:</p>
+<h1 id="getting-business-information-from-yelp-api">Getting Business Information from Yelp API</h1>
+<p>After getting rid of the user and business objects. However, the business ids in the review objects are not all in our dataset, in fact, most of them are not in our dataset. Thus we need to obtain information for each business_id in the reviews using the Yelp API. Namely, for each business_id, we need to obtain its name, categories, city, state (see above for a refresher on the types of fields in business objects).</p>
+<p>Below is an example of the JSON of the API's response and code to generate a response from a known business id.</p>
+<p><strong>Note: Running the full API script below takes at least 1 hour also one needs to make sure the API credentials(consumer_key, consumer_secret, token, token_secret) have not been used in the past 24 hours.</strong></p>
 </div>
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[7]:
+In&nbsp;[3]:
 </div>
 <div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">R</span>
-<span class="n">column_names</span> <span class="o">=</span> <span class="n">names</span><span class="p">(</span><span class="n">plant_nodes</span><span class="p">[[</span><span class="mi">1</span><span class="p">]])</span>
-<span class="n">cat</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span>
+<div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">oauth2</span>
+<span class="kn">import</span> <span class="nn">optparse</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">urllib2</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">url_params</span><span class="p">,</span> <span class="n">consumer_key</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Returns response for API request.&quot;&quot;&quot;</span>
+  <span class="c"># Unsigned URL</span>
+  <span class="n">encoded_params</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+  <span class="k">if</span> <span class="n">url_params</span><span class="p">:</span>
+    <span class="n">encoded_params</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">url_params</span><span class="p">)</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;http://</span><span class="si">%s%s</span><span class="s">?</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">encoded_params</span><span class="p">)</span>
+  <span class="c">#print &#39;URL: %s&#39; % (url,)</span>
+
+  <span class="c"># Sign the URL</span>
+  <span class="n">consumer</span> <span class="o">=</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Consumer</span><span class="p">(</span><span class="n">consumer_key</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">)</span>
+  <span class="n">oauth_request</span> <span class="o">=</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="p">{})</span>
+  <span class="n">oauth_request</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;oauth_nonce&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">generate_nonce</span><span class="p">(),</span>
+                        <span class="s">&#39;oauth_timestamp&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">generate_timestamp</span><span class="p">(),</span>
+                        <span class="s">&#39;oauth_token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+                        <span class="s">&#39;oauth_consumer_key&#39;</span><span class="p">:</span> <span class="n">consumer_key</span><span class="p">})</span>
+
+  <span class="n">token</span> <span class="o">=</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Token</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+  <span class="n">oauth_request</span><span class="o">.</span><span class="n">sign_request</span><span class="p">(</span><span class="n">oauth2</span><span class="o">.</span><span class="n">SignatureMethod_HMAC_SHA1</span><span class="p">(),</span> <span class="n">consumer</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+  <span class="n">signed_url</span> <span class="o">=</span> <span class="n">oauth_request</span><span class="o">.</span><span class="n">to_url</span><span class="p">()</span>
+  <span class="c">#print &#39;Signed URL: %s\n&#39; % (signed_url,)</span>
+
+  <span class="c"># Connect</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">signed_url</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">finally</span><span class="p">:</span>
+      <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+  <span class="k">except</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">print</span> <span class="n">response</span>
+    <span class="k">return</span> <span class="mi">0</span>
+  <span class="k">except</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">URLError</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">print</span> <span class="n">response</span>
+    <span class="k">return</span> <span class="mi">0</span>
+
+  <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;error&quot;</span><span class="p">):</span>
+      <span class="k">print</span> <span class="n">response</span>
+      <span class="k">return</span> <span class="mi">0</span>
+  <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">response</span>
 </pre></div>
 
 </div>
 </div>
 
-<div class="vbox output_wrapper">
-<div class="output vbox">
-
-
-<div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_display_data">
-
-
-<pre>
-COMMON BOTANICAL ZONE LIGHT PRICE AVAILABILITY
-</pre>
-
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Given a column name, we create a data frame column containing the column values:</p>
-</div>
-<div class="cell border-box-sizing code_cell vbox">
-<div class="input hbox">
-<div class="prompt input_prompt">
-In&nbsp;[11]:
-</div>
-<div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">R</span>
-<span class="n">common_tag</span> <span class="o">=</span> <span class="n">column_names</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="n">get_value</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">plant_node</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span> <span class="n">xmlValue</span><span class="p">(</span><span class="n">plant_node</span><span class="p">[[</span><span class="n">tag</span><span class="p">]])</span>
-    
-<span class="n">common_column</span> <span class="o">=</span> <span class="n">sapply</span><span class="p">(</span><span class="n">plant_nodes</span><span class="p">,</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">common_tag</span><span class="p">)</span>
-    
-<span class="n">cat</span><span class="p">(</span><span class="n">common_column</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-
-<div class="vbox output_wrapper">
-<div class="output vbox">
-
-
-<div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_display_data">
-
-
-<pre>
-Bloodroot Columbine Marsh Marigold Cowslip Dutchman&apos;s-Breeches Ginger, Wild Hepatica Liverleaf Jack-In-The-Pulpit Mayapple Phlox, Woodland Phlox, Blue Spring-Beauty Trillium Wake Robin Violet, Dog-Tooth Trout Lily Adder&apos;s-Tongue Anemone Grecian Windflower Bee Balm Bergamot Black-Eyed Susan Buttercup Crowfoot Butterfly Weed Cinquefoil Primrose Gentian Blue Gentian Jacob&apos;s Ladder Greek Valerian California Poppy Shooting Star Snakeroot Cardinal Flower
-</pre>
-
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We package the code above into a function that creates the data frame column corresponding from a tag name and a list of plant nodes:</p>
-</div>
-<div class="cell border-box-sizing code_cell vbox">
-<div class="input hbox">
-<div class="prompt input_prompt">
-In&nbsp;[12]:
-</div>
-<div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">R</span>
-<span class="n">get_column</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">plants</span><span class="p">)</span> <span class="n">sapply</span><span class="p">(</span><span class="n">plants</span><span class="p">,</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
-    
-<span class="n">cat</span><span class="p">((</span><span class="n">get_column</span><span class="p">(</span><span class="s">&#39;COMMON&#39;</span><span class="p">,</span> <span class="n">plant_nodes</span><span class="p">)))</span>
-</pre></div>
-
-</div>
-</div>
-
-<div class="vbox output_wrapper">
-<div class="output vbox">
-
-
-<div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_display_data">
-
-
-<pre>
-Bloodroot Columbine Marsh Marigold Cowslip Dutchman&apos;s-Breeches Ginger, Wild Hepatica Liverleaf Jack-In-The-Pulpit Mayapple Phlox, Woodland Phlox, Blue Spring-Beauty Trillium Wake Robin Violet, Dog-Tooth Trout Lily Adder&apos;s-Tongue Anemone Grecian Windflower Bee Balm Bergamot Black-Eyed Susan Buttercup Crowfoot Butterfly Weed Cinquefoil Primrose Gentian Blue Gentian Jacob&apos;s Ladder Greek Valerian California Poppy Shooting Star Snakeroot Cardinal Flower
-</pre>
-
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We are now ready to retrieve all the columns of our data frame into a list of vectors, which we will use to construct our data frame:</p>
 </div>
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
@@ -2393,12 +2271,17 @@ Bloodroot Columbine Marsh Marigold Cowslip Dutchman&apos;s-Breeches Ginger, Wild
 In&nbsp;[13]:
 </div>
 <div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">R</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">lapply</span><span class="p">(</span><span class="n">column_names</span><span class="p">,</span> <span class="n">get_column</span><span class="p">,</span> <span class="n">plant_nodes</span><span class="p">)</span>
+<div class="highlight-ipynb"><pre class="ipynb"><span class="n">host</span> <span class="o">=</span> <span class="s">&quot;api.yelp.com&quot;</span>
+<span class="n">base_path</span> <span class="o">=</span> <span class="s">&quot;/v2/business/&quot;</span>
+<span class="n">url_params</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">consumer_key</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;hdFjqcPRZyZ0eqi26af3tw&quot;</span><span class="p">,</span> <span class="s">&quot;Tu3m_QRgdipzMJKT-x9vTQ&quot;</span><span class="p">,</span> <span class="s">&quot;x55q4kU1QTXdig6zngh3Sg&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">consumer_secret</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Ex5U5ZJflQb-tx4T0AJiyKKf1yM&quot;</span><span class="p">,</span> <span class="s">&quot;l9XzqRBxRyomzFDZpn8T7XYIdy8&quot;</span><span class="p">,</span> <span class="s">&quot;-Ys5B0Adhp45gEWkpJYXI5zDgzg&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">token</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;-w0vkTLODYebA_4PrEer9T48bHB_TD1S&quot;</span><span class="p">,</span> <span class="s">&quot;_G42cXhomk-lVe_Faw0LMm9jx-O7RowJ&quot;</span><span class="p">,</span> <span class="s">&quot;IaotbVR-_XmBZ-dNZ4Ji4P2s7yq4EYOs&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">token_secret</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;PZnOemFP0TJbkzLKQsBn8lNO3U8&quot;</span><span class="p">,</span> <span class="s">&quot;VtxXupf6luJ3kgTU1YuHBisRpHA&quot;</span><span class="p">,</span> <span class="s">&quot;pzw-X-xvf_Fj8Cs1wQVg4FvT090&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
 
-<span class="n">plant_df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">stringsAsFactors</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">)</span>
+<span class="n">business_id</span>  <span class="o">=</span> <span class="s">&quot;--3iH7ezDwTGn5lolFMdhg&quot;</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">plant_df</span><span class="p">))</span>
+<span class="n">request</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">base_path</span> <span class="o">+</span> <span class="n">business_id</span><span class="p">,</span> <span class="n">url_params</span><span class="p">,</span> <span class="n">consumer_key</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -2408,26 +2291,46 @@ In&nbsp;[13]:
 <div class="output vbox">
 
 
-<div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_display_data">
+<div class="hbox output_area"><div class="prompt output_prompt">
+    Out[13]:</div>
+<div class="box-flex1 output_subarea output_pyout">
 
 
 <pre>
-               COMMON              BOTANICAL ZONE        LIGHT PRICE
-1           Bloodroot Sanguinaria canadensis    4 Mostly Shady $2.44
-2           Columbine   Aquilegia canadensis    3 Mostly Shady $9.37
-3      Marsh Marigold       Caltha palustris    4 Mostly Sunny $6.81
-4             Cowslip       Caltha palustris    4 Mostly Shady $9.90
-5 Dutchman&apos;s-Breeches    Dicentra cucullaria    3 Mostly Shady $6.44
-6        Ginger, Wild       Asarum canadense    3 Mostly Shady $9.03
-  AVAILABILITY
-1       031599
-2       030699
-3       051799
-4       030699
-5       012099
-6       041899
-
+{u&apos;categories&apos;: [[u&apos;Antiques&apos;, u&apos;antiques&apos;],
+  [u&apos;Cards &amp; Stationery&apos;, u&apos;stationery&apos;]],
+ u&apos;display_phone&apos;: u&apos;+1-919-942-3339&apos;,
+ u&apos;id&apos;: u&apos;toots-and-magoo-chapel-hill&apos;,
+ u&apos;image_url&apos;: u&apos;http://s3-media1.ak.yelpcdn.com/bphoto/gLDKpxivU-3fbcwdRVBYvg/ms.jpg&apos;,
+ u&apos;is_claimed&apos;: True,
+ u&apos;is_closed&apos;: True,
+ u&apos;location&apos;: {u&apos;address&apos;: [u&apos;201 S Estes Dr&apos;],
+  u&apos;city&apos;: u&apos;Chapel Hill&apos;,
+  u&apos;country_code&apos;: u&apos;US&apos;,
+  u&apos;display_address&apos;: [u&apos;201 S Estes Dr&apos;, u&apos;Chapel Hill, NC 27514&apos;],
+  u&apos;postal_code&apos;: u&apos;27514&apos;,
+  u&apos;state_code&apos;: u&apos;NC&apos;},
+ u&apos;mobile_url&apos;: u&apos;http://m.yelp.com/biz/toots-and-magoo-chapel-hill&apos;,
+ u&apos;name&apos;: u&apos;Toots and Magoo&apos;,
+ u&apos;phone&apos;: u&apos;9199423339&apos;,
+ u&apos;rating&apos;: 4.0,
+ u&apos;rating_img_url&apos;: u&apos;http://s3-media4.ak.yelpcdn.com/assets/2/www/img/c2f3dd9799a5/ico/stars/v1/stars_4.png&apos;,
+ u&apos;rating_img_url_large&apos;: u&apos;http://s3-media2.ak.yelpcdn.com/assets/2/www/img/ccf2b76faa2c/ico/stars/v1/stars_large_4.png&apos;,
+ u&apos;rating_img_url_small&apos;: u&apos;http://s3-media4.ak.yelpcdn.com/assets/2/www/img/f62a5be2f902/ico/stars/v1/stars_small_4.png&apos;,
+ u&apos;review_count&apos;: 11,
+ u&apos;reviews&apos;: [{u&apos;excerpt&apos;: u&apos;I was sad to see Toots and Magoo leave the Franklin street location and move to University Mall.  The new location lacks the same &quot;magical wilderness&quot; feel...&apos;,
+   u&apos;id&apos;: u&apos;6_YbOOpTCmilmDvxvM8ibw&apos;,
+   u&apos;rating&apos;: 3,
+   u&apos;rating_image_large_url&apos;: u&apos;http://s3-media1.ak.yelpcdn.com/assets/2/www/img/e8b5b79d37ed/ico/stars/v1/stars_large_3.png&apos;,
+   u&apos;rating_image_small_url&apos;: u&apos;http://s3-media3.ak.yelpcdn.com/assets/2/www/img/902abeed0983/ico/stars/v1/stars_small_3.png&apos;,
+   u&apos;rating_image_url&apos;: u&apos;http://s3-media3.ak.yelpcdn.com/assets/2/www/img/34bc8086841c/ico/stars/v1/stars_3.png&apos;,
+   u&apos;time_created&apos;: 1321033606,
+   u&apos;user&apos;: {u&apos;id&apos;: u&apos;w4xul4H66RB3zXnn9i3FzA&apos;,
+    u&apos;image_url&apos;: u&apos;http://s3-media3.ak.yelpcdn.com/photo/NJaKYLB6jPc07nvXyMKLaw/ms.jpg&apos;,
+    u&apos;name&apos;: u&apos;Felecia B.&apos;}}],
+ u&apos;snippet_image_url&apos;: u&apos;http://s3-media1.ak.yelpcdn.com/photo/OGio-ESMW60LF_sopXjrag/ms.jpg&apos;,
+ u&apos;snippet_text&apos;: u&apos;I LOVE this store! The owners have such a wonderful eye for design. One of the few places in the area with a wide selection of letterpress cards and...&apos;,
+ u&apos;url&apos;: u&apos;http://www.yelp.com/biz/toots-and-magoo-chapel-hill&apos;}
 </pre>
 
 </div>
@@ -2437,62 +2340,77 @@ In&nbsp;[13]:
 </div>
 
 </div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Using the data frame we just created, we save the plant data into a csv file into the raw data directory:</p>
-</div>
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[14]:
+In&nbsp;[25]:
 </div>
 <div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">R</span>
-<span class="n">write</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="n">plant_df</span><span class="p">,</span> <span class="s">&#39;./data/raw/plants_to_be_cleaned.csv&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell vbox">
-<div class="input hbox">
-<div class="prompt input_prompt">
-In&nbsp;[]:
-</div>
-<div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">!</span>head ./data/raw/plants_to_be_cleaned.csv
-</pre></div>
-
-</div>
-</div>
-
-</div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Packaging-the-gathering-code-into-reusable-functions">Packaging the gathering code into reusable functions<a class="anchor-link" href="#Packaging-the-gathering-code-into-reusable-functions">&#182;</a></h3>
-</div>
-
-<div class="cell border-box-sizing code_cell vbox">
-<div class="input hbox">
-<div class="prompt input_prompt">
-In&nbsp;[15]:
-</div>
-<div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">file</span> <span class="o">./</span><span class="n">script</span><span class="o">/</span><span class="n">plant_df</span><span class="o">-</span><span class="n">R</span>
-
-<span class="n">get_value</span>  <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">plant_node</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span> <span class="n">xmlValue</span><span class="p">(</span><span class="n">plant_node</span><span class="p">[[</span><span class="n">tag</span><span class="p">]])</span>
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">get_business_info</span><span class="p">():</span>
+    <span class="k">print</span> <span class="s">&quot;Running...&quot;</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="s">&quot;api.yelp.com&quot;</span>
+    <span class="n">base_path</span> <span class="o">=</span> <span class="s">&quot;/v2/business/&quot;</span>
+    <span class="n">url_params</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c">#consumer_key = &quot;hdFjqcPRZyZ0eqi26af3tw&quot;</span>
+    <span class="c">#consumer_secret = &quot;Ex5U5ZJflQb-tx4T0AJiyKKf1yM&quot;</span>
+    <span class="c">#token = &quot;-w0vkTLODYebA_4PrEer9T48bHB_TD1S&quot;</span>
+    <span class="c">#token_secret = &quot;PZnOemFP0TJbkzLKQsBn8lNO3U8&quot;</span>
     
-<span class="n">get_column</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">plants</span><span class="p">)</span> <span class="n">sapply</span><span class="p">(</span><span class="n">plants</span><span class="p">,</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
-    
-<span class="n">create_df_from_plant_xml</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">plant_file</span><span class="p">){</span>
-    <span class="n">require</span><span class="p">(</span><span class="n">XML</span><span class="p">)</span>
-    <span class="n">xml_doc</span>      <span class="o">=</span> <span class="n">xmlParse</span><span class="p">(</span><span class="n">plant_file</span><span class="p">)</span>
-    <span class="n">root_node</span>    <span class="o">=</span> <span class="n">xmlRoot</span><span class="p">(</span><span class="n">xml_doc</span><span class="p">)</span>
-    <span class="n">plant_nodes</span>  <span class="o">=</span> <span class="n">xmlChildren</span><span class="p">(</span><span class="n">root_node</span><span class="p">)</span>
-    <span class="n">column_names</span> <span class="o">=</span> <span class="n">names</span><span class="p">(</span><span class="n">plant_nodes</span><span class="p">[[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">location</span> <span class="o">=</span>  <span class="s">&quot;../data/cleaned/users1.txt&quot;</span>  <span class="c">#location of &quot;cleaned&quot; data so far</span>
+    <span class="n">outputFile</span> <span class="o">=</span> <span class="s">&quot;../data/cleaned/businesses.txt&quot;</span> <span class="c">#location of output JSON file containing business info </span>
 
-    <span class="n">data</span>     <span class="o">=</span> <span class="n">lapply</span><span class="p">(</span><span class="n">column_names</span><span class="p">,</span> <span class="n">get_column</span><span class="p">,</span> <span class="n">plant_nodes</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">stringsAsFactors</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">))</span>
-<span class="p">}</span>
+    <span class="n">businesses</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+        <span class="n">users_processed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">users_processed</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">reviews</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span>
+            <span class="n">business_ids</span> <span class="o">=</span> <span class="n">reviews</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="k">print</span> <span class="n">business_ids</span>
+            <span class="k">return</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="n">business_ids</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">businesses</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">business_id</span><span class="p">)):</span>
+                    <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+    <span class="k">print</span> <span class="s">&quot;Need to obtain info for {0} businesses&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">businesses</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="n">businesses</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">200</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">i</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">+</span> <span class="n">business_id</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">request</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">url_params</span><span class="p">,</span> <span class="n">consumer_key</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">city</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">response</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;location&quot;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;location&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;city&quot;</span><span class="p">):</span>
+                        <span class="n">city</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;location&quot;</span><span class="p">][</span><span class="s">&quot;city&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;location&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;state_code&quot;</span><span class="p">):</span>
+                        <span class="n">state</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;location&quot;</span><span class="p">][</span><span class="s">&quot;state_code&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;categories&quot;</span><span class="p">):</span>
+                    <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;categories&quot;</span><span class="p">]]</span>
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">):</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span>
+            <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;city&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">city</span>           
+            <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">state</span>
+            <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;categories&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">categories</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">response</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n\n\n</span><span class="s">&quot;</span>
+            <span class="k">print</span> <span class="s">&quot;Failed : &quot;</span><span class="p">,</span> <span class="n">business_id</span>
+            <span class="k">print</span> <span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outputFile</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">businesses</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="k">print</span> <span class="s">&quot;Elapsed Time: &quot;</span><span class="p">,</span> <span class="n">elapsed_time</span><span class="p">,</span> <span class="s">&quot; s&quot;</span>
+
+<span class="k">print</span> <span class="n">consumer_secret</span>
+<span class="n">get_business_info</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -2505,9 +2423,23 @@ In&nbsp;[15]:
 <div class="hbox output_area"><div class="prompt"></div>
 <div class="box-flex1 output_subarea output_stream output_stdout">
 <pre>
-Writing ./script/plant_df-R
+-Ys5B0Adhp45gEWkpJYXI5zDgzg
+Running...
+[u&apos;i3vMZ7UK2jgHoKvWZPgKuw&apos;]
 
 </pre>
+</div>
+</div>
+
+<div class="hbox output_area"><div class="prompt output_prompt">
+    Out[25]:</div>
+<div class="box-flex1 output_subarea output_pyout">
+
+
+<pre>
+0
+</pre>
+
 </div>
 </div>
 
@@ -2516,18 +2448,16 @@ Writing ./script/plant_df-R
 
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now, our function converting a raw plant XML file into a R data frame can be used in other notebooks, using the <code>source</code> command:</p>
+<p>A snippet of the file just made is shown below.</p>
 </div>
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[16]:
+In&nbsp;[20]:
 </div>
 <div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">R</span>
-<span class="n">source</span><span class="p">(</span><span class="s">&#39;./script/plant_df-R&#39;</span><span class="p">)</span>
-
-<span class="k">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">create_df_from_plant_xml</span><span class="p">(</span><span class="n">plant_file</span><span class="p">)))</span>
+<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">bash</span>
+<span class="n">head</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">cleaned</span><span class="o">/</span><span class="n">businesses</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 
 </div>
@@ -2538,27 +2468,20 @@ In&nbsp;[16]:
 
 
 <div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_display_data">
-
-
+<div class="box-flex1 output_subarea output_stream output_stdout">
 <pre>
-               COMMON              BOTANICAL ZONE        LIGHT PRICE
-1           Bloodroot Sanguinaria canadensis    4 Mostly Shady $2.44
-2           Columbine   Aquilegia canadensis    3 Mostly Shady $9.37
-3      Marsh Marigold       Caltha palustris    4 Mostly Sunny $6.81
-4             Cowslip       Caltha palustris    4 Mostly Shady $9.90
-5 Dutchman&apos;s-Breeches    Dicentra cucullaria    3 Mostly Shady $6.44
-6        Ginger, Wild       Asarum canadense    3 Mostly Shady $9.03
-  AVAILABILITY
-1       031599
-2       030699
-3       051799
-4       030699
-5       012099
-6       041899
+{
+    &quot;dBMbnlYGkqReYVSu2OUoqA&quot;: {
+        &quot;city&quot;: &quot;Atlanta&quot;, 
+        &quot;state&quot;: &quot;GA&quot;, 
+        &quot;name&quot;: &quot;Midtown Medical Associates&quot;, 
+        &quot;categories&quot;: [
+            &quot;Internal Medicine&quot;, 
+            &quot;Family Practice&quot;, 
+            &quot;Dermatologists&quot;
+        ]
 
 </pre>
-
 </div>
 </div>
 
@@ -2566,18 +2489,8 @@ In&nbsp;[16]:
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell vbox">
-<div class="input hbox">
-<div class="prompt input_prompt">
-In&nbsp;[]:
-</div>
-<div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb">
-</pre></div>
-
-</div>
-</div>
-
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="end">END</h1>
 </div></p>
             </div>
             <!-- /.entry-content -->
