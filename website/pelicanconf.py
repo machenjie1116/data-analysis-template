@@ -31,8 +31,8 @@ MENUITEMS = [('Report', 'nb4'),
              ('Data Analysis', 'nb3'),
              ('Data Cleaning', 'nb2'),
              ('Data Gathering', 'nb1'),
-		 	 ('Yelp User Network', 'http://bl.ocks.org/sclau/c278c43d8d2824342552'),
-			 ('Yelp Business Map', 'http://bl.ocks.org/sclau/67625e91dad7c0a8b59c'), 
+		 	 ('User Network', 'http://bl.ocks.org/sclau/c278c43d8d2824342552'),
+			 ('Business Map', 'http://bl.ocks.org/sclau/67625e91dad7c0a8b59c'), 
             ]
 
 DISPLAY_TAGS_ON_SIDEBAR = False
@@ -42,8 +42,8 @@ LINKS = (('Project Report', 'nb4'),
          ('Data Analysis',  'nb3'),
          ('Data Cleaning',  'nb2'),
          ('Data Gathering', 'nb1'),
-		 ('Yelp User Network', 'http://bl.ocks.org/sclau/c278c43d8d2824342552'),
-		 ('Yelp Business Map', 'http://bl.ocks.org/sclau/67625e91dad7c0a8b59c'), 
+		 ('User Network', 'http://bl.ocks.org/sclau/c278c43d8d2824342552'),
+		 ('Business Map', 'http://bl.ocks.org/sclau/67625e91dad7c0a8b59c'), 
         )
 
 
