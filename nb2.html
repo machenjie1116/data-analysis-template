@@ -1720,7 +1720,7 @@ init_mathjax();
             <meta property="og:type" content="article"/>
             <meta property="og:title" content="Data Cleaning"/>
             <meta property="og:url" content="http://machenjie1116.github.io/data-analysis-template/nb2.html"/>
-            <meta property="og:description" content="{% notebook NB2_data_cleaning.ipynb cells[:] %}"/>
+            <meta property="og:description" content="In this notebook, you'll load the raw data into R or Pandas dataframe from the ./data/raw directory using the functions and classes (written during the data gathering phase) in the ./script directory perform visual exploration on your data variables to detect anomalies, errors, outliers, interesting features etc. clean ..."/>
 
     <!-- Bootstrap -->
         <link rel="stylesheet" href="http://machenjie1116.github.io/data-analysis-template/theme/css/bootstrap.min.css" type="text/css"/>
@@ -1815,7 +1815,188 @@ Yelp Data Analysis Project            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p>{% notebook NB2_data_cleaning.ipynb cells[:] %}</p>
+                <p>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this notebook, you'll</p>
+<ul>
+<li><p><strong>load the raw data into R or Pandas dataframe</strong> from the <code>./data/raw</code> directory using the functions and classes (written during the data gathering phase) in the <code>./script</code> directory</p></li>
+<li><p><strong>perform visual exploration</strong> on your data variables to detect anomalies, errors, outliers, interesting features etc.</p></li>
+<li><p><strong>clean categorical and quantitative variables</strong> (by removing observations and variables with too many missing values, by consolidating categorical variables, by selecting an appropriate subset of variables and observations for later analysis, etc.)</p></li>
+<li><p><strong>save the cleaned data</strong> into csv files in the <code>./data/cleaned</code> directory</p></li>
+<li><p><strong>save interesting graphics</strong> you obtained during visual exploration into the <code>./visualiation</code> directory</p></li>
+</ul>
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="team-members-responsible-for-this-notebook">Team members responsible for this notebook:</h2>
+<p>List the team members contributing to this notebook, along with their responsabilities:</p>
+<ul>
+<li><strong>Harish Kumar</strong>: team member 1 <strong>responsabilities</strong></li>
+<li>team member 2 <strong>name</strong>: team member 2 <strong>responsabilities</strong></li>
+</ul>
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="start">START</h1>
+<p>As mentioned before, since we only want the food-related reviews, we have to filter out the non-food related businesses from the reviews. We can do this by first defining a list of categories which are considered to be associated with food. Then, create a list of</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[15]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">def</span> <span class="nf">is_food_related</span><span class="p">(</span><span class="n">business</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">business</span><span class="p">[</span><span class="s">&quot;categories&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Food&quot;</span><span class="p">,</span> <span class="s">&quot;Buffets&quot;</span><span class="p">,</span> <span class="s">&quot;Creperies&quot;</span><span class="p">,</span> <span class="s">&quot;Juice Bars &amp; Smoothies&quot;</span><span class="p">,</span> <span class="s">&quot;Candy Stores&quot;</span><span class="p">,</span> <span class="s">&quot;Diners&quot;</span><span class="p">,</span> <span class="s">&quot;Ice Cream &amp; Frozen Yogurt&quot;</span><span class="p">,</span><span class="s">&quot;Coffee &amp; Tea&quot;</span><span class="p">,</span> 
+                  <span class="s">&quot;Cafes&quot;</span><span class="p">,</span> <span class="s">&quot;Bagels&quot;</span><span class="p">,</span> <span class="s">&quot;Bakeries&quot;</span><span class="p">,</span> <span class="s">&quot;Sandwiches&quot;</span><span class="p">,</span> <span class="s">&quot;Desserts&quot;</span><span class="p">,</span> <span class="s">&quot;Food Stands&quot;</span><span class="p">,</span> <span class="s">&quot;Street Vendors&quot;</span><span class="p">,</span> <span class="s">&quot;Ethnic Food&quot;</span><span class="p">,</span> <span class="s">&quot;Vegetarian&quot;</span><span class="p">,</span> <span class="s">&quot;Breakfast &amp; Brunch&quot;</span> <span class="p">]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">business</span><span class="p">[</span><span class="s">&quot;categories&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="bp">False</span>
+
+
+<span class="k">def</span> <span class="nf">get_food_businesses</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="s">r&#39;./data/cleaned/businesses.txt&#39;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+        <span class="n">businesses</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">businesses</span>
+
+
+<span class="k">def</span> <span class="nf">filter_businesses</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">businesses</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">is_food_related</span><span class="p">(</span><span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">])):</span>
+                <span class="k">del</span> <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;state&quot;</span><span class="p">]</span> 
+                <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;name&quot;</span><span class="p">]</span> 
+                <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;categories&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;categories&quot;</span><span class="p">]</span> 
+                <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;city&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;city&quot;</span><span class="p">]</span> 
+        <span class="k">if</span> <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">{}:</span>
+            <span class="k">del</span> <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">users</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">r&#39;../data/cleaned/users1.txt&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">r&#39;../data/cleaned/businesses.txt&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile2</span><span class="p">:</span>
+        <span class="n">businesses</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">infile2</span><span class="p">)</span>
+    
+    <span class="n">users</span> <span class="o">=</span> <span class="n">filter_businesses</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">businesses</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">r&#39;../data/cleaned/users2.txt&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile1</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">outfile1</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    
+    
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, in order to see the concentration of users among geographical locations, we have to compute the location for each user. This is done by assuming that a user's reviews would be concentrated in businesses where he/she resides. For example, if user1 reviews 5 restaurants in New York but only 1 from San Francisco, it can be assumed that user1's location is New York.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[22]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">operator</span>
+
+<span class="k">def</span> <span class="nf">compute_user_locations</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile1</span><span class="p">:</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">infile1</span><span class="p">)</span>
+
+    <span class="n">user_locations</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">location_count</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">business</span> <span class="ow">in</span> <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">business_location</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business</span><span class="p">][</span><span class="s">&quot;city&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">location_count</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">business_location</span><span class="p">):</span>
+                <span class="n">location_count</span><span class="p">[</span><span class="n">business_location</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">location_count</span><span class="p">[</span><span class="n">business_location</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">location_count</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">user_locations</span><span class="p">[</span><span class="n">user</span><span class="p">]</span> <span class="o">=</span> <span class="n">location</span>
+
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+        <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;location&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_locations</span><span class="p">[</span><span class="n">user</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">users</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">input_location</span> <span class="o">=</span> <span class="s">r&#39;../data/cleaned/users2.txt&#39;</span>
+    <span class="n">output_location</span> <span class="o">=</span> <span class="s">r&#39;../data/cleaned/users3.txt&#39;</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">compute_user_locations</span><span class="p">(</span><span class="n">input_location</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_location</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile1</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">outfile1</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, we can see that each user has a &quot;location&quot; field in addition to their &quot;reviews&quot; field.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[24]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">bash</span>
+<span class="n">head</span> <span class="o">-</span><span class="n">n</span> <span class="mi">20</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">cleaned</span><span class="o">/</span><span class="n">users3</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+{
+    &quot;gMAncN40yUEnciPNd-eZAA&quot;: {
+        &quot;reviews&quot;: {
+            &quot;6nOxwnuN0ZwLX3h3JYSJnA&quot;: {
+                &quot;rating&quot;: 4, 
+                &quot;state&quot;: &quot;NY&quot;, 
+                &quot;name&quot;: &quot;Tom&apos;s Restaurant&quot;, 
+                &quot;categories&quot;: [
+                    &quot;Diners&quot;
+                ], 
+                &quot;city&quot;: &quot;New York&quot;
+            }
+        }, 
+        &quot;location&quot;: &quot;New York&quot;
+    }, 
+    &quot;CtXKeKjhT_SQVtgrvn8adQ&quot;: {
+        &quot;reviews&quot;: {
+            &quot;_Dc5E16rCL16j2xsUHw18Q&quot;: {
+                &quot;rating&quot;: 4, 
+                &quot;state&quot;: &quot;NY&quot;, 
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="end">END</h1>
+</div></p>
             </div>
             <!-- /.entry-content -->
         </article>

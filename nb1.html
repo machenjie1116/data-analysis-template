@@ -1720,7 +1720,7 @@ init_mathjax();
             <meta property="og:type" content="article"/>
             <meta property="og:title" content="Data Gathering"/>
             <meta property="og:url" content="http://machenjie1116.github.io/data-analysis-template/nb1.html"/>
-            <meta property="og:description" content="{% notebook NB1_data_gathering.ipynb cells[:] %}"/>
+            <meta property="og:description" content="In this notebook, you'll create the directory structure for your project download the raw data for your project write functions and classes to transform raw data (e.g in XML, jason, etc.) into data frames explain what your are doing Team members responsible for this notebook: Harish Kumar Palaniswamy ..."/>
 
     <!-- Bootstrap -->
         <link rel="stylesheet" href="http://machenjie1116.github.io/data-analysis-template/theme/css/bootstrap.min.css" type="text/css"/>
@@ -1815,7 +1815,683 @@ Yelp Data Analysis Project            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p>{% notebook NB1_data_gathering.ipynb cells[:] %}</p>
+                <p>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this notebook, you'll</p>
+<ul>
+<li>create the directory structure for your project</li>
+<li>download the raw data for your project</li>
+<li><strong>write functions and classes to transform raw data (e.g in XML, jason, etc.) into data frames</strong></li>
+<li>explain what your are doing</li>
+</ul>
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="team-members-responsible-for-this-notebook">Team members responsible for this notebook:</h2>
+<p>Harish Kumar Palaniswamy</p>
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Creating initial folders for storing data</strong></p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[5]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">bash</span>
+<span class="n">mkdir</span> <span class="o">../</span><span class="n">data</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">raw</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">cleaned</span>
+
+<span class="nb">dir</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+NB1_data_gathering.ipynb  NB3_data_analysis.ipynb   README.md
+NB2_data_cleaning.ipynb   NB4_project_report.ipynb
+
+</pre>
+</div>
+</div>
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stderr">
+<pre>
+mkdir: cannot create directory ‘../data’: File exists
+mkdir: cannot create directory ‘../data/raw’: File exists
+mkdir: cannot create directory ‘../data/cleaned’: File exists
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="raw-data">Raw Data</h1>
+<p>The dataset is a single gzip-compressed file, composed of one json-object per line. Every object contains a 'type' field, which tells you whether it is a business, a user, or a review.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[19]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">pprint</span>
+<span class="n">rawdata_location</span> <span class="o">=</span> <span class="s">&quot;../data/raw/yelp_academic_dataset.json&quot;</span>
+<span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">rawdata_location</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="c">#print &quot;User: &quot;, user</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">474233</span><span class="p">):</span>
+        <span class="n">business</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="c">#print &quot;\n\n\Business: &quot;, line</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">400000</span><span class="p">):</span>
+        <span class="n">review</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="c">#print &quot;\n\n Review: &quot;, review</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="user">User</h2>
+<p>User objects contain aggregate information about a single user across all of Yelp (including businesses and reviews not in this dataset)</p>
+</div>
+{
+  'type': 'user',
+  'user_id': (unique user identifier),
+  'name': (first name, last initial, like 'Matt J.'),
+  'review_count': (review count),
+  'average_stars': (floating point average, like 4.31),
+  'votes': {
+    'useful': (count of useful votes across all reviews),
+    'funny': (count of funny votes across all reviews),
+    'cool': (count of cool votes across all reviews)
+  }
+}
+
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[22]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="n">user</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt output_prompt">
+    Out[22]:</div>
+<div class="box-flex1 output_subarea output_pyout">
+
+
+<pre>
+{u&apos;average_stars&apos;: 3.2258064516129,
+ u&apos;name&apos;: u&apos;LiiLii C.&apos;,
+ u&apos;review_count&apos;: 31,
+ u&apos;type&apos;: u&apos;user&apos;,
+ u&apos;url&apos;: u&apos;http://www.yelp.com/user_details?userid=JkeCKyEaQlbLd9uZYl4DjA&apos;,
+ u&apos;user_id&apos;: u&apos;JkeCKyEaQlbLd9uZYl4DjA&apos;,
+ u&apos;votes&apos;: {u&apos;cool&apos;: 18, u&apos;funny&apos;: 15, u&apos;useful&apos;: 48}}
+</pre>
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="business">Business</h2>
+<p>Business objects contain basic information about local businesses. The 'business_id' field can be used with the Yelp API. The fields are as follows,</p>
+</div>
+{
+  'type': 'business',
+  'business_id': (a unique identifier for this business),
+  'name': (the full business name),
+  'neighborhoods': (a list of neighborhood names, might be empty),
+  'full_address': (localized address),
+  'city': (city),
+  'state': (state),
+  'latitude': (latitude),
+  'longitude': (longitude),
+  'stars': (star rating, rounded to half-stars),
+  'review_count': (review count),
+  'photo_url': (photo url),
+  'categories': [(localized category names)]
+  'open': (is the business still open for business?),
+  'schools': (nearby universities),
+  'url': (yelp url)
+}
+
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[84]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="n">business</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt output_prompt">
+    Out[84]:</div>
+<div class="box-flex1 output_subarea output_pyout">
+
+
+<pre>
+{u&apos;business_id&apos;: u&apos;iWMe4FQkftu4fzOyzd0dSQ&apos;,
+ u&apos;categories&apos;: [u&apos;Shopping&apos;, u&apos;Local Flavor&apos;, u&apos;Toy Stores&apos;],
+ u&apos;city&apos;: u&apos;San Luis Obispo&apos;,
+ u&apos;full_address&apos;: u&apos;786 Higuera St\nSan Luis Obispo, CA 93401&apos;,
+ u&apos;latitude&apos;: 35.2797924,
+ u&apos;longitude&apos;: -120.6632318,
+ u&apos;name&apos;: u&apos;Turn to Nature&apos;,
+ u&apos;neighborhoods&apos;: [],
+ u&apos;open&apos;: True,
+ u&apos;photo_url&apos;: u&apos;http://s3-media2.ak.yelpcdn.com/bphoto/DsER4g1PUYwY2-PLpYsAnw/ms.jpg&apos;,
+ u&apos;review_count&apos;: 2,
+ u&apos;schools&apos;: [u&apos;California Polytechnic State University&apos;],
+ u&apos;stars&apos;: 5.0,
+ u&apos;state&apos;: u&apos;CA&apos;,
+ u&apos;type&apos;: u&apos;business&apos;,
+ u&apos;url&apos;: u&apos;http://www.yelp.com/biz/turn-to-nature-san-luis-obispo&apos;}
+</pre>
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Review">Review<a class="anchor-link" href="#Review">&#182;</a></h2>
+</div>
+
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Review objects contain the review text, the star rating, and information on votes Yelp users have cast on the review. We can use user_id to associate a particular review with others by the same user. Likewise, we can use business_id to associate this review with others of the same business.</p>
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>{ 'type': 'test' 'type': 'review', 'business_id': (the identifier of the reviewed business), 'user_id': (the identifier of the authoring user), 'stars': (star rating, integer 1-5), 'text': (review text), 'date': (date, formatted like '2011-04-19'), 'votes': { 'useful': (count of useful votes), 'funny': (count of funny votes), 'cool': (count of cool votes) } }</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[85]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="n">review</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt output_prompt">
+    Out[85]:</div>
+<div class="box-flex1 output_subarea output_pyout">
+
+
+<pre>
+{u&apos;business_id&apos;: u&apos;huHxwjbkyEf1nTam-o2BOQ&apos;,
+ u&apos;date&apos;: u&apos;2012-03-22&apos;,
+ u&apos;review_id&apos;: u&apos;AtxcKzzazdxLXcUocUDlaw&apos;,
+ u&apos;stars&apos;: 5,
+ u&apos;text&apos;: u&quot;Delicious, Fast and Healthy. I&apos;ve been looking for a restaurant like this for a long time. I really like the pickled veggies and pork.&quot;,
+ u&apos;type&apos;: u&apos;review&apos;,
+ u&apos;user_id&apos;: u&apos;XbNUd-QY3h22VH9Y9mSywg&apos;,
+ u&apos;votes&apos;: {u&apos;cool&apos;: 0, u&apos;funny&apos;: 0, u&apos;useful&apos;: 0}}
+</pre>
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Since the reviews contain the user ids and business ids, we only need the review objects and thus, can get rid of the review and user objects. Also, we can now group each reviews by their user id so that we can easily see the reviews for each particular user.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[23]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">json</span>
+<span class="n">rawdata_location</span> <span class="o">=</span> <span class="s">&quot;../data/raw/yelp_academic_dataset.json&quot;</span>
+<span class="k">def</span> <span class="nf">read_yelpdata</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="s">&quot;../data/raw/yelp_academic_dataset.json&quot;</span><span class="p">):</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="c">#read each object line by line</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;business&#39;</span><span class="p">:</span>
+                <span class="k">pass</span> <span class="c">#ignore business objects</span>
+            <span class="k">elif</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;review&#39;</span><span class="p">:</span>
+                <span class="n">business_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;business_id&#39;</span><span class="p">]</span>
+                <span class="n">user_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;user_id&#39;</span><span class="p">]</span>
+                <span class="n">rating</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;stars&#39;</span><span class="p">]</span>
+                
+                
+                <span class="k">if</span> <span class="n">users</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+                    <span class="n">users</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;rating&quot;</span><span class="p">:</span><span class="n">rating</span><span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">users</span><span class="p">[</span><span class="n">user_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="n">users</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="n">users</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;rating&quot;</span><span class="p">:</span> <span class="n">rating</span><span class="p">}</span>
+            <span class="k">elif</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;user&#39;</span><span class="p">:</span>
+                <span class="k">pass</span> <span class="c">#ignore user objects as well </span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c">#should never trigger</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unknown type&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">users</span>
+    
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">read_yelpdata</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;Processed {0} users&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;../data/cleaned/users1.txt&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+Processed 130873 users
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The data dumped is of the form is of the following schema</p>
+<p>{</p>
+<pre><code>&quot;user_id&quot;: {
+        &quot;business_id&quot;: Rating that user left for business associated with this business ID, from 1-5
+
+}</code></pre>
+<p>}</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[15]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">bash</span>
+<span class="n">head</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">cleaned</span><span class="o">/</span><span class="n">users1</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+{
+    &quot;---1lKK3aKOuomHnwAkAow&quot;: {
+        &quot;KG3Y2qyrru2SZxR_c5gHyg&quot;: 5, 
+        &quot;VFslQjSgrw4Mu5_Q1xk1KQ&quot;: 5
+    }, 
+    &quot;---crLYmdoy-u29cBZjWfg&quot;: {
+        &quot;0iSN6PgiXKP4oSVL037ATg&quot;: 5, 
+        &quot;gbeCaZrCz1X5RcxX6GC1ng&quot;: 4
+    }, 
+    &quot;--1PqS9ZNtl5NMX-xKWg8w&quot;: {
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="getting-business-information-from-yelp-api">Getting Business Information from Yelp API</h1>
+<p>After getting rid of the user and business objects. However, the business ids in the review objects are not all in our dataset, in fact, most of them are not in our dataset. Thus we need to obtain information for each business_id in the reviews using the Yelp API. Namely, for each business_id, we need to obtain its name, categories, city, state (see above for a refresher on the types of fields in business objects).</p>
+<p>Below is an example of the JSON of the API's response and code to generate a response from a known business id.</p>
+<p><strong>Note: Running the full API script below takes at least 1 hour also one needs to make sure the API credentials(consumer_key, consumer_secret, token, token_secret) have not been used in the past 24 hours.</strong></p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[3]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">oauth2</span>
+<span class="kn">import</span> <span class="nn">optparse</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">urllib2</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">url_params</span><span class="p">,</span> <span class="n">consumer_key</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Returns response for API request.&quot;&quot;&quot;</span>
+  <span class="c"># Unsigned URL</span>
+  <span class="n">encoded_params</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+  <span class="k">if</span> <span class="n">url_params</span><span class="p">:</span>
+    <span class="n">encoded_params</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">url_params</span><span class="p">)</span>
+  <span class="n">url</span> <span class="o">=</span> <span class="s">&#39;http://</span><span class="si">%s%s</span><span class="s">?</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">encoded_params</span><span class="p">)</span>
+  <span class="c">#print &#39;URL: %s&#39; % (url,)</span>
+
+  <span class="c"># Sign the URL</span>
+  <span class="n">consumer</span> <span class="o">=</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Consumer</span><span class="p">(</span><span class="n">consumer_key</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">)</span>
+  <span class="n">oauth_request</span> <span class="o">=</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="p">{})</span>
+  <span class="n">oauth_request</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;oauth_nonce&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">generate_nonce</span><span class="p">(),</span>
+                        <span class="s">&#39;oauth_timestamp&#39;</span><span class="p">:</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">generate_timestamp</span><span class="p">(),</span>
+                        <span class="s">&#39;oauth_token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+                        <span class="s">&#39;oauth_consumer_key&#39;</span><span class="p">:</span> <span class="n">consumer_key</span><span class="p">})</span>
+
+  <span class="n">token</span> <span class="o">=</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">Token</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+  <span class="n">oauth_request</span><span class="o">.</span><span class="n">sign_request</span><span class="p">(</span><span class="n">oauth2</span><span class="o">.</span><span class="n">SignatureMethod_HMAC_SHA1</span><span class="p">(),</span> <span class="n">consumer</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+  <span class="n">signed_url</span> <span class="o">=</span> <span class="n">oauth_request</span><span class="o">.</span><span class="n">to_url</span><span class="p">()</span>
+  <span class="c">#print &#39;Signed URL: %s\n&#39; % (signed_url,)</span>
+
+  <span class="c"># Connect</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">signed_url</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">finally</span><span class="p">:</span>
+      <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+  <span class="k">except</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">print</span> <span class="n">response</span>
+    <span class="k">return</span> <span class="mi">0</span>
+  <span class="k">except</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">URLError</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">print</span> <span class="n">response</span>
+    <span class="k">return</span> <span class="mi">0</span>
+
+  <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;error&quot;</span><span class="p">):</span>
+      <span class="k">print</span> <span class="n">response</span>
+      <span class="k">return</span> <span class="mi">0</span>
+  <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">response</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[13]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="n">host</span> <span class="o">=</span> <span class="s">&quot;api.yelp.com&quot;</span>
+<span class="n">base_path</span> <span class="o">=</span> <span class="s">&quot;/v2/business/&quot;</span>
+<span class="n">url_params</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">consumer_key</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;hdFjqcPRZyZ0eqi26af3tw&quot;</span><span class="p">,</span> <span class="s">&quot;Tu3m_QRgdipzMJKT-x9vTQ&quot;</span><span class="p">,</span> <span class="s">&quot;x55q4kU1QTXdig6zngh3Sg&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">consumer_secret</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Ex5U5ZJflQb-tx4T0AJiyKKf1yM&quot;</span><span class="p">,</span> <span class="s">&quot;l9XzqRBxRyomzFDZpn8T7XYIdy8&quot;</span><span class="p">,</span> <span class="s">&quot;-Ys5B0Adhp45gEWkpJYXI5zDgzg&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">token</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;-w0vkTLODYebA_4PrEer9T48bHB_TD1S&quot;</span><span class="p">,</span> <span class="s">&quot;_G42cXhomk-lVe_Faw0LMm9jx-O7RowJ&quot;</span><span class="p">,</span> <span class="s">&quot;IaotbVR-_XmBZ-dNZ4Ji4P2s7yq4EYOs&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">token_secret</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;PZnOemFP0TJbkzLKQsBn8lNO3U8&quot;</span><span class="p">,</span> <span class="s">&quot;VtxXupf6luJ3kgTU1YuHBisRpHA&quot;</span><span class="p">,</span> <span class="s">&quot;pzw-X-xvf_Fj8Cs1wQVg4FvT090&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="n">business_id</span>  <span class="o">=</span> <span class="s">&quot;--3iH7ezDwTGn5lolFMdhg&quot;</span>
+
+<span class="n">request</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">base_path</span> <span class="o">+</span> <span class="n">business_id</span><span class="p">,</span> <span class="n">url_params</span><span class="p">,</span> <span class="n">consumer_key</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt output_prompt">
+    Out[13]:</div>
+<div class="box-flex1 output_subarea output_pyout">
+
+
+<pre>
+{u&apos;categories&apos;: [[u&apos;Antiques&apos;, u&apos;antiques&apos;],
+  [u&apos;Cards &amp; Stationery&apos;, u&apos;stationery&apos;]],
+ u&apos;display_phone&apos;: u&apos;+1-919-942-3339&apos;,
+ u&apos;id&apos;: u&apos;toots-and-magoo-chapel-hill&apos;,
+ u&apos;image_url&apos;: u&apos;http://s3-media1.ak.yelpcdn.com/bphoto/gLDKpxivU-3fbcwdRVBYvg/ms.jpg&apos;,
+ u&apos;is_claimed&apos;: True,
+ u&apos;is_closed&apos;: True,
+ u&apos;location&apos;: {u&apos;address&apos;: [u&apos;201 S Estes Dr&apos;],
+  u&apos;city&apos;: u&apos;Chapel Hill&apos;,
+  u&apos;country_code&apos;: u&apos;US&apos;,
+  u&apos;display_address&apos;: [u&apos;201 S Estes Dr&apos;, u&apos;Chapel Hill, NC 27514&apos;],
+  u&apos;postal_code&apos;: u&apos;27514&apos;,
+  u&apos;state_code&apos;: u&apos;NC&apos;},
+ u&apos;mobile_url&apos;: u&apos;http://m.yelp.com/biz/toots-and-magoo-chapel-hill&apos;,
+ u&apos;name&apos;: u&apos;Toots and Magoo&apos;,
+ u&apos;phone&apos;: u&apos;9199423339&apos;,
+ u&apos;rating&apos;: 4.0,
+ u&apos;rating_img_url&apos;: u&apos;http://s3-media4.ak.yelpcdn.com/assets/2/www/img/c2f3dd9799a5/ico/stars/v1/stars_4.png&apos;,
+ u&apos;rating_img_url_large&apos;: u&apos;http://s3-media2.ak.yelpcdn.com/assets/2/www/img/ccf2b76faa2c/ico/stars/v1/stars_large_4.png&apos;,
+ u&apos;rating_img_url_small&apos;: u&apos;http://s3-media4.ak.yelpcdn.com/assets/2/www/img/f62a5be2f902/ico/stars/v1/stars_small_4.png&apos;,
+ u&apos;review_count&apos;: 11,
+ u&apos;reviews&apos;: [{u&apos;excerpt&apos;: u&apos;I was sad to see Toots and Magoo leave the Franklin street location and move to University Mall.  The new location lacks the same &quot;magical wilderness&quot; feel...&apos;,
+   u&apos;id&apos;: u&apos;6_YbOOpTCmilmDvxvM8ibw&apos;,
+   u&apos;rating&apos;: 3,
+   u&apos;rating_image_large_url&apos;: u&apos;http://s3-media1.ak.yelpcdn.com/assets/2/www/img/e8b5b79d37ed/ico/stars/v1/stars_large_3.png&apos;,
+   u&apos;rating_image_small_url&apos;: u&apos;http://s3-media3.ak.yelpcdn.com/assets/2/www/img/902abeed0983/ico/stars/v1/stars_small_3.png&apos;,
+   u&apos;rating_image_url&apos;: u&apos;http://s3-media3.ak.yelpcdn.com/assets/2/www/img/34bc8086841c/ico/stars/v1/stars_3.png&apos;,
+   u&apos;time_created&apos;: 1321033606,
+   u&apos;user&apos;: {u&apos;id&apos;: u&apos;w4xul4H66RB3zXnn9i3FzA&apos;,
+    u&apos;image_url&apos;: u&apos;http://s3-media3.ak.yelpcdn.com/photo/NJaKYLB6jPc07nvXyMKLaw/ms.jpg&apos;,
+    u&apos;name&apos;: u&apos;Felecia B.&apos;}}],
+ u&apos;snippet_image_url&apos;: u&apos;http://s3-media1.ak.yelpcdn.com/photo/OGio-ESMW60LF_sopXjrag/ms.jpg&apos;,
+ u&apos;snippet_text&apos;: u&apos;I LOVE this store! The owners have such a wonderful eye for design. One of the few places in the area with a wide selection of letterpress cards and...&apos;,
+ u&apos;url&apos;: u&apos;http://www.yelp.com/biz/toots-and-magoo-chapel-hill&apos;}
+</pre>
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[25]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">get_business_info</span><span class="p">():</span>
+    <span class="k">print</span> <span class="s">&quot;Running...&quot;</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="s">&quot;api.yelp.com&quot;</span>
+    <span class="n">base_path</span> <span class="o">=</span> <span class="s">&quot;/v2/business/&quot;</span>
+    <span class="n">url_params</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c">#consumer_key = &quot;hdFjqcPRZyZ0eqi26af3tw&quot;</span>
+    <span class="c">#consumer_secret = &quot;Ex5U5ZJflQb-tx4T0AJiyKKf1yM&quot;</span>
+    <span class="c">#token = &quot;-w0vkTLODYebA_4PrEer9T48bHB_TD1S&quot;</span>
+    <span class="c">#token_secret = &quot;PZnOemFP0TJbkzLKQsBn8lNO3U8&quot;</span>
+    
+    <span class="n">location</span> <span class="o">=</span>  <span class="s">&quot;../data/cleaned/users1.txt&quot;</span>  <span class="c">#location of &quot;cleaned&quot; data so far</span>
+    <span class="n">outputFile</span> <span class="o">=</span> <span class="s">&quot;../data/cleaned/businesses.txt&quot;</span> <span class="c">#location of output JSON file containing business info </span>
+
+    <span class="n">businesses</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+        <span class="n">users_processed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">users_processed</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">reviews</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span>
+            <span class="n">business_ids</span> <span class="o">=</span> <span class="n">reviews</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="k">print</span> <span class="n">business_ids</span>
+            <span class="k">return</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="n">business_ids</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">businesses</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">business_id</span><span class="p">)):</span>
+                    <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+    <span class="k">print</span> <span class="s">&quot;Need to obtain info for {0} businesses&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">businesses</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="n">businesses</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">200</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">i</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">+</span> <span class="n">business_id</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">request</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">url_params</span><span class="p">,</span> <span class="n">consumer_key</span><span class="p">,</span> <span class="n">consumer_secret</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">token_secret</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">city</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">response</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;location&quot;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;location&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;city&quot;</span><span class="p">):</span>
+                        <span class="n">city</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;location&quot;</span><span class="p">][</span><span class="s">&quot;city&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;location&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;state_code&quot;</span><span class="p">):</span>
+                        <span class="n">state</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;location&quot;</span><span class="p">][</span><span class="s">&quot;state_code&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;categories&quot;</span><span class="p">):</span>
+                    <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;categories&quot;</span><span class="p">]]</span>
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">):</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span>
+            <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;city&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">city</span>           
+            <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;state&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">state</span>
+            <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="n">businesses</span><span class="p">[</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;categories&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">categories</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">response</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n\n\n</span><span class="s">&quot;</span>
+            <span class="k">print</span> <span class="s">&quot;Failed : &quot;</span><span class="p">,</span> <span class="n">business_id</span>
+            <span class="k">print</span> <span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outputFile</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">businesses</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="k">print</span> <span class="s">&quot;Elapsed Time: &quot;</span><span class="p">,</span> <span class="n">elapsed_time</span><span class="p">,</span> <span class="s">&quot; s&quot;</span>
+
+<span class="k">print</span> <span class="n">consumer_secret</span>
+<span class="n">get_business_info</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+-Ys5B0Adhp45gEWkpJYXI5zDgzg
+Running...
+[u&apos;i3vMZ7UK2jgHoKvWZPgKuw&apos;]
+
+</pre>
+</div>
+</div>
+
+<div class="hbox output_area"><div class="prompt output_prompt">
+    Out[25]:</div>
+<div class="box-flex1 output_subarea output_pyout">
+
+
+<pre>
+0
+</pre>
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A snippet of the file just made is shown below.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[20]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">bash</span>
+<span class="n">head</span> <span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">cleaned</span><span class="o">/</span><span class="n">businesses</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+
+</div>
+</div>
+
+<div class="vbox output_wrapper">
+<div class="output vbox">
+
+
+<div class="hbox output_area"><div class="prompt"></div>
+<div class="box-flex1 output_subarea output_stream output_stdout">
+<pre>
+{
+    &quot;dBMbnlYGkqReYVSu2OUoqA&quot;: {
+        &quot;city&quot;: &quot;Atlanta&quot;, 
+        &quot;state&quot;: &quot;GA&quot;, 
+        &quot;name&quot;: &quot;Midtown Medical Associates&quot;, 
+        &quot;categories&quot;: [
+            &quot;Internal Medicine&quot;, 
+            &quot;Family Practice&quot;, 
+            &quot;Dermatologists&quot;
+        ]
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="end">END</h1>
+</div></p>
             </div>
             <!-- /.entry-content -->
         </article>
