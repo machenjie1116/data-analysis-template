@@ -6,7 +6,7 @@ import sets
 def get_data(city, size):
     users = {}
     business_id = []
-    with open('../stat133proj2/processed_data/onlyfood_users.txt', 'rb') as infile:
+    with open('../onlyfood_users.txt', 'rb') as infile:
         data = json.load(infile)
         i = 0
         for user in data.keys():
@@ -65,7 +65,9 @@ def reid_ids():
         { user_id": {
           "re_id":reindex_id,
           "user_name":user_name,
-          "user_reviews":user_reviews},...
+          "user_reviews":user_reviews
+		  "user_match":user_match
+		  "rest_recs":rest_recs},...
         }
         business_ids = {business_id: {
           "re_id":reindex_id,
@@ -76,7 +78,7 @@ def reid_ids():
     user_ids = {}
     business_ids = {}
     for user in user_id:
-        user_ids[user] = {'re_id':'','name':'','reviews':''}
+        user_ids[user] = {'re_id':'','name':'','reviews':'','user_match':'','rest_recs':''}
     for business in bid_list:
         business_ids[business] = {'re_id':'','name':'','reviews':''}
     # user and business re-index
@@ -88,7 +90,7 @@ def reid_ids():
         business_ids[bid_list[x]]['re_id'] = x + len(user_id)
         
     # user and business name index    
-    with open('data/yelp_academic_dataset.json', 'rb') as f:
+    with open('../data/yelp_academic_dataset.json', 'rb') as f:
         for line in f:
             item = json.loads(line)
             if item['type'] == "user":
@@ -109,12 +111,30 @@ def reid_ids():
                 
     return users, user_ids, business_ids
 
+# add user matches and recommendations
+def add_usermatch():
+    (users, user_ids, business_ids) = reid_ids()
+    with open('../data/user_matches.json', 'r') as f1:
+        with open('../data/names.json', 'r') as f2:
+            data = json.load(f1)
+            names = json.load(f2)
+            for user1 in data.keys():
+                if data[user1]['city'] == city:
+                    for user in user_ids.keys():
+                        if user1 == user:
+                            match_id = data[user1]['user_match']
+                            restrec_id = data[user1]['restaraunt_recs']
+                            user_ids[user]['user_match'] = names[match_id]
+                            user_ids[user]['rest_recs'] = names[restrec_id]
+    return users, user_ids, business_ids
+
+
 # create nodes for each user and business, sized by review count
 def create_nodes():
-    (users, user_ids, business_ids) = reid_ids()
+    (users, user_ids, business_ids) = add_usermatch()
     nodes = []
     for user in user_ids.keys():
-        nodes.append({"_name":user_ids[user]['name'], "user_reviewcount":user_ids[user]['reviews']})
+        nodes.append({"_name":user_ids[user]['name'], "user_reviewcount":user_ids[user]['reviews'],"user_match":user_ids[user]['user_match'],"rest_recs":user_ids[user]['rest_recs']})
     for business in business_ids.keys():
         nodes.append({"_name":business_ids[business]['name'], "bus_reviewcount":business_ids[business]['reviews']})
     return nodes
