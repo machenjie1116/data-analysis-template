@@ -1829,11 +1829,722 @@ Yelp Data Analysis Project            </a>
 <h2 id="team-members-responsible-for-this-notebook">Team members responsible for this notebook:</h2>
 <p>List the team members contributing to this notebook, along with their responsabilities:</p>
 <ul>
-<li>team member 1 <strong>name</strong>: team member 1 <strong>responsabilities</strong></li>
-<li>team member 2 <strong>name</strong>: team member 2 <strong>responsabilities</strong></li>
+<li>team member 1 <strong>Harish Kumar</strong>: team member 1 <strong>responsabilities</strong></li>
+<li>team member 2 <strong>Samuel Lau</strong>: team member 2 <strong>responsabilities</strong></li>
+<li>team member 3 <strong>Chenjie Ma</strong>: team member 3 <strong>responsabilities</strong></li>
+<li>team member 4 <strong>Daniel Shen</strong>: team member 4 <strong>responsabilities</strong></li>
 <li>etc.</li>
 </ul>
 <p>I advise you to work at least in pairs for each project notebook, as you did for the homework assignments. Of course, all team members may participate to each notebook.</p>
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Descriptive-Statistics-on-existing-data">Descriptive Statistics on existing data<a class="anchor-link" href="#Descriptive-Statistics-on-existing-data">&#182;</a></h2>
+</div>
+
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Based on dataset (csv format) generated from <strong>descriptive_stats.py</strong> in the data cleaning step, we did some basic graph plotting using R. Using R, we first created a data.frame based on <strong>errors.csv</strong> and created necessary column names using vectors. Next, using built-in R commands such as pie and histogram plots, we manage to show analyses such as <u>proportion of yelp reviews according to states</u>, <u>review rating density plot</u> and <u>review count distribution</u>.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[2]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%</span><span class="k">load_ext</span> <span class="n">rmagic</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="o">%%</span><span class="k">R</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s">&#39;/home/oski/src/data-analysis-template/stat133proj2/errors.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">F</span><span class="p">)</span>
+<span class="n">colnames</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="s">&#39;Errors&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s">&#39;data/business_table.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">F</span><span class="p">)</span>
+<span class="n">colnames</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="s">&#39;business_id&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;review_count&#39;</span><span class="p">,</span> <span class="s">&#39;rating&#39;</span><span class="p">,</span> <span class="s">&#39;city&#39;</span><span class="p">,</span> <span class="s">&#39;state&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+
+<span class="n">hist</span><span class="p">(</span><span class="n">df</span><span class="err">$</span><span class="n">rating</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="s">&#39;Review Rating Density Plot&#39;</span><span class="p">,</span> <span class="n">prob</span><span class="o">=</span><span class="n">T</span><span class="p">)</span>
+<span class="n">curve</span><span class="p">(</span><span class="n">dnorm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">mean</span><span class="p">(</span><span class="n">df</span><span class="err">$</span><span class="n">rating</span><span class="p">),</span> <span class="n">sd</span><span class="o">=</span><span class="n">sd</span><span class="p">(</span><span class="n">df</span><span class="err">$</span><span class="n">rating</span><span class="p">)),</span> <span class="n">add</span><span class="o">=</span><span class="n">TRUE</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s">&#39;red&#39;</span><span class="p">)</span>
+
+<span class="n">pie</span><span class="p">(</span><span class="n">table</span><span class="p">(</span><span class="n">df</span><span class="err">$</span><span class="n">state</span><span class="p">),</span> <span class="n">main</span><span class="o">=</span><span class="s">&#39;Proportion of States&#39;</span><span class="p">)</span>
+
+<span class="n">plot</span><span class="p">((</span><span class="n">density</span><span class="p">(</span><span class="n">table</span><span class="p">(</span><span class="n">df</span><span class="err">$</span><span class="n">review_count</span><span class="p">))),</span> <span class="n">main</span><span class="o">=</span><span class="s">&#39;Review Count Distribution&#39;</span><span class="p">)</span>
+
+<span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="err">$</span><span class="n">review_count</span><span class="p">,</span> <span class="n">df</span><span class="err">$</span><span class="n">rating</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="A-recommendation-system-based-on-Yelp-academic-dataset">A recommendation system based on Yelp academic dataset<a class="anchor-link" href="#A-recommendation-system-based-on-Yelp-academic-dataset">&#182;</a></h2>
+</div>
+
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After our initial data cleaning process, we are left with <strong>users_latest.txt</strong> consisting data in the form of dictionaries.</p>
+</div>
+i.e. 
+{
+    "user_id": {
+        "reviews": {
+            "business_id": {
+                "rating":
+                "state":
+                "name":
+                "categories": {   }
+                "city":
+        }
+    }
+    "location":
+}
+
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Essentially, the entire dataset is a large dictionary with user_ids as keys and business_ids are their corresponding values. Similarly, each business_id is the key for another dictionary with corresponding values including &quot;rating&quot;, &quot;state&quot;, &quot;name&quot;, &quot;categories&quot;, etc. Due to the complexity of the dataset, with multiple dictionaries nested within bigger dictionaries, we implemented numerous data abstraction helper functions along the way.</p>
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>At the onset, we imported all necessary modules and the processed dataset from our data cleaning step.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[4]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+
+<span class="n">MAX_INT</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxint</span>
+<span class="n">MIN_INT</span> <span class="o">=</span> <span class="o">-</span><span class="n">sys</span><span class="o">.</span><span class="n">maxint</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;../stat133proj2/processed_data/users_latest.txt&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inf</span><span class="p">:</span>
+    <span class="n">dict_from_file</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">inf</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">dict_from_file</span>
+    
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The following are the <u>data abstraction helper functions</u> that we defined.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[5]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">get_business_ids</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[6]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">get_rating</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="n">business_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;rating&quot;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[7]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">get_category</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="n">business_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;categories&quot;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[8]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">get_location</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span><span class="s">&quot;location&quot;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The fav_category function takes in an user_id and returns the favorite restaurant category of that particular user. We iterated through every restaurant that the user has visited and noted the category with the highest frequency (highest preference).</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[9]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">fav_category</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+    <span class="n">fav_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">business_id_lst</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_business_ids</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="n">business_id_lst</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">get_category</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="n">business_id</span><span class="p">):</span> <span class="c">#category != None</span>
+            <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">get_category</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="n">business_id</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">category</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fav_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">fav_dict</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">fav_dict</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fav_dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">fav_dict</span><span class="p">,</span><span class="n">key</span><span class="o">=</span><span class="n">fav_dict</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Going to the methodology of our recommendation engine, we first implement the distance methods: <strong>manhattan</strong> and <strong>euclidean</strong>. Essentially, these methods compare the difference in ratings of users in who share common reviews (users who reviewed the same restaurants). We assume the more similar the ratings between two users, the more similar their preferences and hence the nearer their distance. By using this information, we can calculate the distance of a &quot;new&quot; user with existing &quot;old&quot; users and find a suitable match.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[10]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">distance_method</span><span class="p">(</span><span class="n">user_id1</span><span class="p">,</span> <span class="n">user_id2</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">user1_business_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">user_id1</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">user2_business_ids</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">user_id2</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="c">#If user1(target) has been to all the restaurants that user2 has been to</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">user2_business_ids</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">user1_business_ids</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">MAX_INT</span>
+
+    <span class="n">businesses</span> <span class="o">=</span> <span class="n">user1_business_ids</span>
+    <span class="n">businesses</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">user2_business_ids</span><span class="p">)</span>
+    <span class="n">ratings1</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ratings2</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">business</span> <span class="ow">in</span> <span class="n">businesses</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">business</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">user_id1</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">ratings1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">user_id1</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business</span><span class="p">][</span><span class="s">&quot;rating&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ratings1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">business</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">user_id2</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">ratings2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">user_id2</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business</span><span class="p">][</span><span class="s">&quot;rating&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ratings2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">ratings1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ratings1</span><span class="p">)</span>
+    <span class="n">ratings2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ratings2</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">ratings1</span> <span class="o">-</span> <span class="n">ratings2</span> <span class="p">,</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Perhaps a more suitable and accurate method of our recommendation engine, the <strong>Cosine Similarity</strong> method compares the user ratings and comes up with a value between 0 and 1, with 0 being completely different and 1 being perfectly similar. Using this method, we are able to compute a similarity index between two users and thus find a complementary user_2 who has similar preferences as user_1.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[11]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">cosine_similarity</span><span class="p">(</span><span class="n">user_1</span><span class="p">,</span> <span class="n">user_2</span><span class="p">):</span>
+    <span class="n">business1</span> <span class="o">=</span> <span class="n">dict_from_file</span><span class="p">[</span><span class="n">user_1</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">business2</span> <span class="o">=</span> <span class="n">dict_from_file</span><span class="p">[</span><span class="n">user_2</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">business2</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">business1</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="n">business1</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">business2</span><span class="p">)</span>
+    <span class="n">businesses</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">business1</span><span class="p">)</span>
+    <span class="n">ratings_1</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ratings_2</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">business</span> <span class="ow">in</span> <span class="n">businesses</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dict_from_file</span><span class="p">[</span><span class="n">user_1</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">business</span><span class="p">):</span>
+            <span class="n">ratings_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dict_from_file</span><span class="p">[</span><span class="n">user_1</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business</span><span class="p">][</span><span class="s">&quot;rating&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ratings_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dict_from_file</span><span class="p">[</span><span class="n">user_2</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">business</span><span class="p">):</span>
+            <span class="n">ratings_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dict_from_file</span><span class="p">[</span><span class="n">user_2</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business</span><span class="p">][</span><span class="s">&quot;rating&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ratings_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ratings_1</span><span class="p">,</span> <span class="n">ratings_2</span><span class="p">)</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ratings_1</span><span class="p">,</span> <span class="n">ratings_1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ratings_2</span><span class="p">,</span> <span class="n">ratings_2</span><span class="p">)))</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As the name suggests, this is a helper function that returns a dictionary with the highest cosine correlation as keys and the corresponding users as values.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[12]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">highest_cosine_user</span><span class="p">(</span><span class="n">user1</span><span class="p">):</span>
+    <span class="n">returnVal</span> <span class="o">=</span> <span class="p">{}</span> <span class="c">#{correlation(float): [user1, user2,..]}</span>
+    <span class="n">otherusers_lst</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">otherusers_lst</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">user1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">otheruser</span> <span class="ow">in</span> <span class="n">otherusers_lst</span><span class="p">:</span>
+        <span class="n">corr</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span><span class="n">otheruser</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">returnVal</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">corr</span><span class="p">)):</span>
+            <span class="n">returnVal</span><span class="p">[</span><span class="n">corr</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">otheruser</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">returnVal</span><span class="p">[</span><span class="n">corr</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">otheruser</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">returnVal</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Another helper function that returns a dictionary with the nearest distances as keys and the corresponding users as values.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[13]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">nearest_with_user</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span><span class="n">r</span><span class="p">):</span>
+    <span class="n">returnVal</span> <span class="o">=</span> <span class="p">{}</span> <span class="c"># {correlation(float): [user1, user2,..]}</span>
+    <span class="n">otherusers_lst</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">otherusers_lst</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">user1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">otheruser</span> <span class="ow">in</span> <span class="n">otherusers_lst</span><span class="p">:</span>
+        <span class="n">corr</span> <span class="o">=</span>  <span class="n">distance_method</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span> <span class="n">otheruser</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">returnVal</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">corr</span><span class="p">)):</span>
+            <span class="n">returnVal</span><span class="p">[</span><span class="n">corr</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">otheruser</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">returnVal</span><span class="p">[</span><span class="n">corr</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">otheruser</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">returnVal</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The troublesome pearson correlation coefficient method <br>returns a user with the highest correlation with user_id1</br> If two users have only one common rating, the correlation will be 1, which is a highest correlation but it’s not very accurate.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">def highest_correlation(user_id1):</span>
+
+<span class="sd">    correlation_lst = []</span>
+<span class="sd">    otherusers_lst = list(data.keys())</span>
+<span class="sd">    otherusers_lst.remove(user_id1)</span>
+
+<span class="sd">    for otheruser in otherusers_lst:</span>
+<span class="sd">        correlation_lst.append((correlation(user_id1,otheruser),otheruser))</span>
+<span class="sd">    print(&#39;highest correlation is&#39;, max(correlation_lst)[0]) #for testing</span>
+<span class="sd">    return max(correlation_lst)[1]</span>
+
+<span class="sd">def correlation(user_id1,user_id2):</span>
+<span class="sd">    n = 0; xy = 0; x = 0; y = 0; sq_y = 0; sq_x = 0</span>
+<span class="sd">    user1_business_ids = get_business_ids(user_id1)</span>
+<span class="sd">    user2_business_ids = get_business_ids(user_id2)</span>
+
+<span class="sd">    for business_id in list(user1_business_ids.keys()):</span>
+<span class="sd">        if business_id in list(user2_business_ids.keys()):</span>
+<span class="sd">            n += 1</span>
+<span class="sd">            rating_by_user_1 = get_rating(user_id1,business_id)</span>
+<span class="sd">            rating_by_user_2 = get_rating(user_id2,business_id)</span>
+<span class="sd">            x = x + rating_by_user_1</span>
+<span class="sd">            y = y + rating_by_user_2</span>
+<span class="sd">            xy = xy + rating_by_user_1*rating_by_user_2</span>
+<span class="sd">            sq_y = sq_y + rating_by_user_1**2</span>
+<span class="sd">            sq_x = sq_x + rating_by_user_2**2</span>
+
+<span class="sd">    if n == 0:</span>
+<span class="sd">        return 0</span>
+
+<span class="sd">    else:</span>
+<span class="sd">        denominator = sqrt(abs(sq_x - float(x**2) / n)) * sqrt(abs(sq_y - float(y**2) / n))</span>
+<span class="sd">        if denominator == 0:</span>
+<span class="sd">            return 0</span>
+<span class="sd">        else:</span>
+<span class="sd">            corr = (xy -( x * y) / n) / denominator</span>
+<span class="sd">            return corr</span>
+<span class="sd">            </span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The main function that takes in an user (format: user_id) and a method (manhattan, euclidean or cosine) and returns <u> a list of restaurants recommendations for the user </u></p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[14]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">recommend_new_restaurant_2</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+    <span class="n">new_restaurants</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">user1_businessids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">user1</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;manhattan&#39;</span><span class="p">:</span>
+        <span class="n">closest_users</span> <span class="o">=</span> <span class="n">nearest_with_user</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">correlations</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">closest_users</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;euclidean&#39;</span><span class="p">:</span>
+        <span class="n">closest_users</span> <span class="o">=</span> <span class="n">nearest_with_user</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">correlations</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">closest_users</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;cosine&#39;</span><span class="p">:</span>
+        <span class="n">closest_users</span> <span class="o">=</span> <span class="n">highest_cosine_user</span><span class="p">(</span><span class="n">user1</span><span class="p">)</span>
+        <span class="n">correlations</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">closest_users</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;pearson&#39;</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">for</span> <span class="n">corr</span> <span class="ow">in</span> <span class="n">correlations</span><span class="p">:</span>
+            <span class="c">#get users with same correlation to target user</span>
+            <span class="n">users</span> <span class="o">=</span> <span class="n">closest_users</span><span class="p">[</span><span class="n">corr</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">corr_user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+                <span class="c">#get business ids of restaurants that target user never went to</span>
+                <span class="n">unvisited_restaurants</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">corr_user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">user1_businessids</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">unvisited_restaurant</span> <span class="ow">in</span> <span class="n">unvisited_restaurants</span><span class="p">:</span>
+                    <span class="n">rating</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">corr_user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">unvisited_restaurant</span><span class="p">][</span><span class="s">&quot;rating&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">rating</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">):</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">corr_user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">unvisited_restaurant</span><span class="p">][</span><span class="s">&quot;name&quot;</span><span class="p">]</span>
+                        <span class="n">new_restaurants</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">unvisited_restaurant</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">corr_user</span><span class="p">,</span> <span class="n">rating</span><span class="p">,</span> <span class="n">corr</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_restaurants</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="n">new_restaurants</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The backup recommendation function that returns restaurant recommendations based on 1) the input user's favorate restaurant category and 2) the input user's situated location. Then, the function will return the highest-rated restaurant that meets criteria 1 and 2. This backup recommendation is complementary to the existing recommend_new_restaurant function in rare cases when it returns an empty list.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[15]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">backup_rec</span><span class="p">(</span><span class="n">user_id1</span><span class="p">):</span>
+    <span class="n">otherusers_lst</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">otherusers_lst</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">user_id1</span><span class="p">)</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">fav_category</span><span class="p">(</span><span class="n">user_id1</span><span class="p">)</span>
+    <span class="n">location</span> <span class="o">=</span> <span class="n">get_location</span><span class="p">(</span><span class="n">user_id1</span><span class="p">)</span>
+    <span class="n">restaurant_lst</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">otheruser</span> <span class="ow">in</span> <span class="n">otherusers_lst</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">get_location</span><span class="p">(</span><span class="n">otheruser</span><span class="p">)</span> <span class="o">==</span> <span class="n">location</span> <span class="ow">and</span> <span class="n">fav_category</span><span class="p">(</span><span class="n">otheruser</span><span class="p">)</span> <span class="o">==</span> <span class="n">category</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_business_ids</span><span class="p">(</span><span class="n">otheruser</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">get_category</span><span class="p">(</span><span class="n">otheruser</span><span class="p">,</span><span class="n">business_id</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">category</span> <span class="ow">in</span> <span class="n">get_category</span><span class="p">(</span><span class="n">otheruser</span><span class="p">,</span><span class="n">business_id</span><span class="p">)):</span>
+                    <span class="n">restaurant_lst</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">business_id</span><span class="p">,</span><span class="n">get_rating</span><span class="p">(</span><span class="n">otheruser</span><span class="p">,</span><span class="n">business_id</span><span class="p">)))</span>
+    <span class="n">restaurant_lst</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">restaurant</span> <span class="ow">in</span> <span class="n">restaurant_lst</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">restaurant</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Recommendation-Method-Testing">Recommendation Method Testing<a class="anchor-link" href="#Recommendation-Method-Testing">&#182;</a></h2>
+</div>
+
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Base on the three methods <strong>(‘Manhattan Distance’, ‘Euclidean Distance’, ‘Cosine similarity’)</strong> we used to recommend a restaurant. We use these methods to find a most <em>similar user</em> of the <em>target user</em>. Based on the rating scale of this similar user we found to predict a exist rating that the target user has given already. And find the difference between the <em>actual exist rating</em> and the <em>predicted rating</em> by using the mean <strong>squared error</strong>.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[17]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="c">#from recommend import *</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[18]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">chunks</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">n</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="n">n</span><span class="p">)]</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[19]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="n">MSE</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">def</span> <span class="nf">combine_results</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+	<span class="n">MSE</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[20]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">mse_all_users</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="s">&quot;./processed_data/&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span> <span class="s">&quot;_error.txt&quot;</span>
+    <span class="n">users_chunked</span> <span class="o">=</span> <span class="n">chunks</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">users_chunk</span> <span class="ow">in</span> <span class="n">users_chunked</span><span class="p">:</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span><span class="n">mse_subset_users</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">users_chunk</span><span class="p">),</span> <span class="n">callback</span><span class="o">=</span><span class="n">combine_results</span><span class="p">)</span>
+    <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">MSE</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[21]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">mse_subset_users</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">users</span><span class="p">):</span>
+    <span class="n">curr_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">MSE</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+        <span class="n">MSE</span><span class="p">[</span><span class="n">user</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_recommendations</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+    <span class="n">total_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">curr_time</span>
+    <span class="k">print</span> <span class="n">total_time</span><span class="p">,</span> <span class="s">&quot;Avg Time per User = {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">total_time</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">MSE</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Recommendation test engine, if rated business of target user is less than or equal to 1, than we are not able to predict a rating to him. Then we give him a mean square error of 5 to separate with the testable users.</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[22]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">test_recommendations</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+    <span class="c">#print user</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;manhattan&quot;</span><span class="p">,</span> <span class="s">&quot;euclidean&quot;</span><span class="p">,</span> <span class="s">&quot;cosine&quot;</span><span class="p">]):</span>
+        <span class="c">#print &quot;Method: &quot;, method</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Invalid Method&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">5</span>
+
+    <span class="n">predicted_ratings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">actual_ratings</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;cosine&quot;</span><span class="p">):</span>
+        <span class="n">user_businesses</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="n">user_businesses</span><span class="p">:</span>
+            <span class="c">#store the data we are about to delete</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span>
+            <span class="c">#pretend like this user never went to the business in the first place</span>
+            <span class="k">del</span> <span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span>
+
+            <span class="n">closest_users</span> <span class="o">=</span> <span class="n">highest_cosine_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">closest_users</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="mf">0.0</span><span class="p">):</span>
+                <span class="k">del</span> <span class="n">closest_users</span><span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="c">#remove users which don&#39;t have any correlation with target user</span>
+
+            <span class="n">predicted_rating</span> <span class="o">=</span> <span class="n">get_predicted_rating</span><span class="p">(</span><span class="n">business_id</span><span class="p">,</span> <span class="n">closest_users</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">closest_users</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">reverse</span> <span class="o">=</span> <span class="bp">True</span><span class="p">))</span>
+            <span class="c">#restore the ignored/deleted review</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">predicted_rating</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">predicted_ratings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">predicted_rating</span><span class="p">)</span>
+                <span class="n">actual_ratings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;rating&quot;</span><span class="p">])</span>
+
+
+        <span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">actual_ratings</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">predicted_ratings</span><span class="p">))</span>
+        <span class="n">actual_ratings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">actual_ratings</span><span class="p">)</span>
+        <span class="n">predicted_ratings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predicted_ratings</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">actual_ratings</span><span class="p">)</span>
+        <span class="c">#return mean squared error of (actual ratings - predicted ratings)</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="n">actual_ratings</span> <span class="o">-</span> <span class="n">predicted_ratings</span>
+        <span class="n">rms_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span> <span class="o">/</span> <span class="n">n</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">rms_error</span>
+
+
+    <span class="k">elif</span> <span class="p">((</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;manhattan&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;euclidean&quot;</span><span class="p">)):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;manhattan&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;euclidean&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">}[</span><span class="n">method</span><span class="p">]</span>
+        <span class="n">user_businesses</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="n">user_businesses</span><span class="p">:</span>
+            <span class="c">#store the data we are about to delete</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span>
+            <span class="c">#pretend like this user went to the business in the first place by deleting the review</span>
+            <span class="k">del</span> <span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span>
+            <span class="n">closest_users</span> <span class="o">=</span> <span class="n">nearest_with_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">closest_users</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">MAX_INT</span><span class="p">):</span>
+                <span class="k">del</span> <span class="n">closest_users</span><span class="p">[</span><span class="n">MAX_INT</span><span class="p">]</span>
+
+            <span class="n">predicted_rating</span> <span class="o">=</span> <span class="n">get_predicted_rating</span><span class="p">(</span><span class="n">business_id</span><span class="p">,</span> <span class="n">closest_users</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">closest_users</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="c">#restore the ignored/deleted review</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">predicted_rating</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">predicted_ratings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">predicted_rating</span><span class="p">)</span>
+                <span class="n">actual_ratings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;rating&quot;</span><span class="p">])</span>
+
+
+        <span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">actual_ratings</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">predicted_ratings</span><span class="p">))</span>
+        <span class="n">actual_ratings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">actual_ratings</span><span class="p">)</span>
+        <span class="n">predicted_ratings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predicted_ratings</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">actual_ratings</span><span class="p">)</span>
+        <span class="c">#return mean squared error of (actual ratings - predicted ratings)</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="n">actual_ratings</span> <span class="o">-</span> <span class="n">predicted_ratings</span>
+        <span class="n">rms_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span> <span class="o">/</span> <span class="n">n</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We use the <em>rates from the target user and closest user</em>, and the <em>correlation</em> of these two users to predict rating of the target user</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[23]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">get_predicted_rating</span><span class="p">(</span><span class="n">business_id</span><span class="p">,</span> <span class="n">closest_users</span><span class="p">,</span> <span class="n">correlations</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">corr</span> <span class="ow">in</span> <span class="n">correlations</span><span class="p">:</span>
+        <span class="n">corr_users</span> <span class="o">=</span> <span class="n">closest_users</span><span class="p">[</span><span class="n">corr</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">corr_user</span> <span class="ow">in</span> <span class="n">corr_users</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">corr_user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">predicted_rating</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">corr_user</span><span class="p">][</span><span class="s">&quot;reviews&quot;</span><span class="p">][</span><span class="n">business_id</span><span class="p">][</span><span class="s">&quot;rating&quot;</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">predicted_rating</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Make a histogram of the mean squared errors. (chopped by 10 levels, from 0 to 5.)</p>
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[24]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">plot_histogram</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="n">error_file</span> <span class="o">=</span> <span class="s">&quot;./processed_data/&quot;</span> <span class="o">+</span> <span class="n">method</span> <span class="o">+</span> <span class="s">&quot;_error.txt&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">error_file</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inputFile</span><span class="p">:</span>
+        <span class="n">cosine_errors</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">inputFile</span><span class="p">)</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cosine_errors</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">print</span> <span class="n">errors</span>
+    <span class="n">hist</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">center</span><span class="p">,</span><span class="n">hist</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">method</span> <span class="o">+</span> <span class="s">&quot;_errors.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell vbox">
+<div class="input hbox">
+<div class="prompt input_prompt">
+In&nbsp;[]:
+</div>
+<div class="input_area box-flex1">
+<div class="highlight-ipynb"><pre class="ipynb">
+</pre></div>
+
+</div>
+</div>
+
 </div></p>
             </div>
             <!-- /.entry-content -->
