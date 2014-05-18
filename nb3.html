@@ -1829,10 +1829,10 @@ Yelp Data Analysis Project            </a>
 <h2 id="team-members-responsible-for-this-notebook">Team members responsible for this notebook:</h2>
 <p>List the team members contributing to this notebook, along with their responsabilities:</p>
 <ul>
-<li>team member 1 <strong>Harish Kumar</strong>: team member 1 <strong>responsabilities</strong></li>
-<li>team member 2 <strong>Samuel Lau</strong>: team member 2 <strong>responsabilities</strong></li>
-<li>team member 3 <strong>Chenjie Ma</strong>: team member 3 <strong>responsabilities</strong></li>
-<li>team member 4 <strong>Daniel Shen</strong>: team member 4 <strong>responsabilities</strong></li>
+<li>team member 1 <strong>Harish Kumar</strong></li>
+<li>team member 2 <strong>Samuel Lau</strong></li>
+<li>team member 3 <strong>Chenjie Ma</strong></li>
+<li>team member 4 <strong>Daniel Shen</strong></li>
 <li>etc.</li>
 </ul>
 <p>I advise you to work at least in pairs for each project notebook, as you did for the homework assignments. Of course, all team members may participate to each notebook.</p>
@@ -2172,49 +2172,47 @@ In&nbsp;[13]:
 <div class="cell border-box-sizing code_cell vbox">
 <div class="input hbox">
 <div class="prompt input_prompt">
-In&nbsp;[]:
+In&nbsp;[1]:
 </div>
 <div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb"><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">def highest_correlation(user_id1):</span>
+<div class="highlight-ipynb"><pre class="ipynb"><span class="k">def</span> <span class="nf">highest_correlation</span><span class="p">(</span><span class="n">user_id1</span><span class="p">):</span>
 
-<span class="sd">    correlation_lst = []</span>
-<span class="sd">    otherusers_lst = list(data.keys())</span>
-<span class="sd">    otherusers_lst.remove(user_id1)</span>
+    <span class="n">correlation_lst</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">otherusers_lst</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">otherusers_lst</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">user_id1</span><span class="p">)</span>
 
-<span class="sd">    for otheruser in otherusers_lst:</span>
-<span class="sd">        correlation_lst.append((correlation(user_id1,otheruser),otheruser))</span>
-<span class="sd">    print(&#39;highest correlation is&#39;, max(correlation_lst)[0]) #for testing</span>
-<span class="sd">    return max(correlation_lst)[1]</span>
+    <span class="k">for</span> <span class="n">otheruser</span> <span class="ow">in</span> <span class="n">otherusers_lst</span><span class="p">:</span>
+        <span class="n">correlation_lst</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">correlation</span><span class="p">(</span><span class="n">user_id1</span><span class="p">,</span><span class="n">otheruser</span><span class="p">),</span><span class="n">otheruser</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;highest correlation is&#39;</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">correlation_lst</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="c">#for testing</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">correlation_lst</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 
-<span class="sd">def correlation(user_id1,user_id2):</span>
-<span class="sd">    n = 0; xy = 0; x = 0; y = 0; sq_y = 0; sq_x = 0</span>
-<span class="sd">    user1_business_ids = get_business_ids(user_id1)</span>
-<span class="sd">    user2_business_ids = get_business_ids(user_id2)</span>
+<span class="k">def</span> <span class="nf">correlation</span><span class="p">(</span><span class="n">user_id1</span><span class="p">,</span><span class="n">user_id2</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">xy</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">sq_y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">sq_x</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">user1_business_ids</span> <span class="o">=</span> <span class="n">get_business_ids</span><span class="p">(</span><span class="n">user_id1</span><span class="p">)</span>
+    <span class="n">user2_business_ids</span> <span class="o">=</span> <span class="n">get_business_ids</span><span class="p">(</span><span class="n">user_id2</span><span class="p">)</span>
 
-<span class="sd">    for business_id in list(user1_business_ids.keys()):</span>
-<span class="sd">        if business_id in list(user2_business_ids.keys()):</span>
-<span class="sd">            n += 1</span>
-<span class="sd">            rating_by_user_1 = get_rating(user_id1,business_id)</span>
-<span class="sd">            rating_by_user_2 = get_rating(user_id2,business_id)</span>
-<span class="sd">            x = x + rating_by_user_1</span>
-<span class="sd">            y = y + rating_by_user_2</span>
-<span class="sd">            xy = xy + rating_by_user_1*rating_by_user_2</span>
-<span class="sd">            sq_y = sq_y + rating_by_user_1**2</span>
-<span class="sd">            sq_x = sq_x + rating_by_user_2**2</span>
+    <span class="k">for</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">user1_business_ids</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">business_id</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">user2_business_ids</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">rating_by_user_1</span> <span class="o">=</span> <span class="n">get_rating</span><span class="p">(</span><span class="n">user_id1</span><span class="p">,</span><span class="n">business_id</span><span class="p">)</span>
+            <span class="n">rating_by_user_2</span> <span class="o">=</span> <span class="n">get_rating</span><span class="p">(</span><span class="n">user_id2</span><span class="p">,</span><span class="n">business_id</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rating_by_user_1</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">rating_by_user_2</span>
+            <span class="n">xy</span> <span class="o">=</span> <span class="n">xy</span> <span class="o">+</span> <span class="n">rating_by_user_1</span><span class="o">*</span><span class="n">rating_by_user_2</span>
+            <span class="n">sq_y</span> <span class="o">=</span> <span class="n">sq_y</span> <span class="o">+</span> <span class="n">rating_by_user_1</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">sq_x</span> <span class="o">=</span> <span class="n">sq_x</span> <span class="o">+</span> <span class="n">rating_by_user_2</span><span class="o">**</span><span class="mi">2</span>
 
-<span class="sd">    if n == 0:</span>
-<span class="sd">        return 0</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
 
-<span class="sd">    else:</span>
-<span class="sd">        denominator = sqrt(abs(sq_x - float(x**2) / n)) * sqrt(abs(sq_y - float(y**2) / n))</span>
-<span class="sd">        if denominator == 0:</span>
-<span class="sd">            return 0</span>
-<span class="sd">        else:</span>
-<span class="sd">            corr = (xy -( x * y) / n) / denominator</span>
-<span class="sd">            return corr</span>
-<span class="sd">            </span>
-<span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">denominator</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">sq_x</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">))</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">sq_y</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">denominator</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">corr</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy</span> <span class="o">-</span><span class="p">(</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span>
+            <span class="k">return</span> <span class="n">corr</span>
+      
 </pre></div>
 
 </div>
@@ -2527,19 +2525,6 @@ In&nbsp;[24]:
     <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">center</span><span class="p">,</span><span class="n">hist</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">method</span> <span class="o">+</span> <span class="s">&quot;_errors.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell vbox">
-<div class="input hbox">
-<div class="prompt input_prompt">
-In&nbsp;[]:
-</div>
-<div class="input_area box-flex1">
-<div class="highlight-ipynb"><pre class="ipynb">
 </pre></div>
 
 </div>

@@ -1720,7 +1720,7 @@ init_mathjax();
             <meta property="og:type" content="article"/>
             <meta property="og:title" content="Project Report"/>
             <meta property="og:url" content="http://machenjie1116.github.io/data-analysis-template/nb4.html"/>
-            <meta property="og:description" content="Yelp Data Analysis Project¶ Team Members: Daniel Tong Shen Chenjie Ma Harish Kumar Palaniswamy Samuel Lau Problem¶ With the yelp academic dataset, we wanted to provide restaurant recommendations to users in the dataset. We used three collaborative filtering methods to provide recommendations: manhattan distance: \[d(x,y) = \sum^n_{k ..."/>
+            <meta property="og:description" content="Yelp Data Analysis Project-Project Report¶ Team Members: Daniel Tong Shen Chenjie Ma Harish Kumar Palaniswamy Samuel Lau Problem¶ With the yelp academic dataset, we wanted to provide restaurant recommendations to users in the dataset. We used three collaborative filtering methods to provide recommendations: manhattan distance: \[d(x,y) = \sum^n_ ..."/>
 
     <!-- Bootstrap -->
         <link rel="stylesheet" href="http://machenjie1116.github.io/data-analysis-template/theme/css/bootstrap.min.css" type="text/css"/>
@@ -1817,7 +1817,7 @@ Yelp Data Analysis Project            </a>
                 </div>
                 <p>
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Yelp-Data-Analysis-Project">Yelp Data Analysis Project<a class="anchor-link" href="#Yelp-Data-Analysis-Project">&#182;</a></h1>
+<h1 id="Yelp-Data-Analysis-Project-Project-Report">Yelp Data Analysis Project-Project Report<a class="anchor-link" href="#Yelp-Data-Analysis-Project-Project-Report">&#182;</a></h1>
 </div>
 
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -2007,14 +2007,14 @@ In&nbsp;[11]:
 </div>
 
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Problems with this method</p>
+<p>Originally, we intended to implement one additional method, the Pearson Correlation Method on top of the existing methods we propose. However, the method proved to be ineffective at showing relationships amongst users from our dataset. This is primarily because of the limited data that we have such that upon evaluations using the Pearson Method mostly return 0. Therefore, we decided to scrap the method altogether and instead focus on using Cosine Similarity.</p>
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Parallelizing-the-Testing-Framework">Parallelizing the Testing Framework<a class="anchor-link" href="#Parallelizing-the-Testing-Framework">&#182;</a></h4>
 </div>
 
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Problems with this</p>
+<p>Since the dataset had more than 10,000 users, we wanted to take advantage of these numbers test our recommendation engine against the data that we have for these users. However, testing for each user sequentially would have taken more than 30 hours. Thus, we decided to parallelize our testing framework and acheived an 8x speedup on an standard multicore machine.</p>
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Ipython-Notebook-and-D3">Ipython Notebook and D3<a class="anchor-link" href="#Ipython-Notebook-and-D3">&#182;</a></h4>
@@ -2022,13 +2022,6 @@ In&nbsp;[11]:
 
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Due to the size of our network graphs, we weren't able to successfully display it in the ipython notebook. And since we were having problems working out the full functionality our html (switching city graphs by clicking buttons), we decided to uploaded our network <a href="http://bl.ocks.org/sclau/c278c43d8d2824342552">here</a> instead. We also did this with the <a href="http://bl.ocks.org/sclau/67625e91dad7c0a8b59c">d3 business map</a>.</p>
-</div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Other-Challenges">Other Challenges<a class="anchor-link" href="#Other-Challenges">&#182;</a></h4>
-</div>
-
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Description</p>
 </div>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Results">Results<a class="anchor-link" href="#Results">&#182;</a></h2>
@@ -3208,7 +3201,7 @@ gg==
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="team-members-responsible-for-this-notebook">Team members responsible for this notebook:</h2>
 <ul>
-<li>team member 1 <strong>Samuel Lau</strong>: describe, comment on, and present results</li>
+<li>team member 1 <strong>Samuel Lau</strong>:</li>
 </ul>
 </div>
 <div class="cell border-box-sizing code_cell vbox">
@@ -3385,25 +3378,6 @@ Transcript written on NB4_project_report.log.
 </div>
 </div>
 
-</div>
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In this notebook, you'll sumarize your finding for the class presentation.</p>
-<p>The class presentation will use this notebook in slide mode, as I do during lecture time.</p>
-<p>You'll need to download the following <a href="https://github.com/fperez/nb-slideshow-template/archive/master.zip">zip file</a>, unzip it, and run the following notebook <code>install-support.ipynb</code> to install the slide capabilities.</p>
-<p>The notebook <code>notebook-slideshow-example.ipynb</code> will give you examples on how to use slides within the iPython notebook.</p>
-<p>You should also write this notebook so that you can convert it nicely into a pdf document using the commands</p>
-<pre><code>ipython nbconvert NB4_report.pynb --to latex
-pdflatex NB4_report.tex</code></pre>
-<p>See <a href="http://ipython.org/ipython-doc/rel-1.0.0/interactive/nbconvert.html">here</a> for further references on how to do that.</p>
-<p>In this notebook, you'll</p>
-<ul>
-<li><p>describe your problem as stated in the propectus</p></li>
-<li><p>comment on your data sources, on their format, on the difficulties to get them</p></li>
-<li><p>present the main challenge you encountered</p></li>
-<li><p>present your finding in the form of expresive graphics</p></li>
-</ul>
-<p>Be sure to include an introduction section motivating your visualizations, with a description of the substantive context and why it is interesting.</p>
-<p>Cite the source of the data and any other references that you used in carrying out your project.</p>
 </div></p>
             </div>
             <!-- /.entry-content -->
